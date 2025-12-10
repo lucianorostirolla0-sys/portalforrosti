@@ -1,1046 +1,904 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Student Portal</title>
-
-  <!-- Mobile / PWA meta -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#1159c4">
-  <link rel="manifest" href="manifest.json">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Student Portal">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+  <meta charset="UTF-8" />
+  <title>Student Portal - Luciano Jesse Rostiroll</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <style>
-    :root{
-      --brand:#1159c4;
-      --bg:#f4f6ff;
-      --card:#ffffff;
-      --muted:#6b7280;
-      --radius:16px;
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-      background:var(--bg);
-      color:#0f172a;
-      -webkit-font-smoothing:antialiased;
-    }
-    a{text-decoration:none;color:inherit}
-
-    /* HEADER */
-    .topbar{
-      position:sticky;
-      top:0;
-      z-index:20;
-      background:var(--brand);
-      color:#fff;
-      padding:16px 16px 20px;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      border-bottom-left-radius:18px;
-      border-bottom-right-radius:18px;
-      box-shadow:0 10px 24px rgba(15,23,42,.35);
-    }
-    .logo{
-      width:40px;
-      height:40px;
-      border-radius:10px;
-      background:#ffffff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-    }
-    .logo img{
-      width:80%;
-      height:80%;
-      object-fit:contain;
-    }
-    .header-text{flex:1;min-width:0}
-    .header-title{
-      font-size:16px;
-      font-weight:700;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .header-sub{
-      font-size:12px;
-      opacity:.9;
-    }
-    .header-actions button{
-      background:transparent;
-      border:0;
-      color:#fff;
-      padding:6px;
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+    :root {
+      --bg: #050816;
+      --bg-soft: #0b1020;
+      --card: #111827;
+      --accent: #3b82f6;
+      --accent-soft: rgba(59, 130, 246, 0.15);
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --danger: #f97373;
+      --border: #1f2937;
+      --radius-xl: 18px;
     }
 
-    /* LAYOUT */
-    main{
-      padding:12px;
-      padding-bottom:90px;
-      max-width:900px;
-      margin:0 auto;
-    }
-    .page{display:none;animation:fadeUp .25s ease-out;}
-    .page.active{display:block;}
-    @keyframes fadeUp{
-      from{opacity:0;transform:translateY(6px);}
-      to{opacity:1;transform:none;}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
     }
 
-    /* CARDS */
-    .card{
-      background:var(--card);
-      border-radius:var(--radius);
-      padding:14px 14px;
-      box-shadow:0 10px 28px rgba(15,23,42,.08);
-      margin-bottom:12px;
+    body {
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
     }
 
-    .pill{
-      border-radius:999px;
-      border:1px solid #e5e7eb;
-      padding:6px 14px;
-      font-size:12px;
-      background:#fff;
-    }
-    .muted{color:var(--muted);}
-    .small{font-size:13px;}
-
-    /* HOME */
-    .home-top{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:center;
-    }
-    .home-top-main{flex:1;}
-    .home-top-title{font-weight:800;}
-    .home-top-sub{font-size:13px;color:var(--muted);margin-top:4px;}
-
-    .quick-grid{
-      display:flex;
-      gap:10px;
-      margin-top:10px;
-    }
-    .quick-item{
-      flex:1;
-      min-width:80px;
-      border-radius:14px;
-      background:#f9fbff;
-      box-shadow:0 8px 18px rgba(15,23,42,.04);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      padding:8px 4px;
-      cursor:pointer;
-      transition:transform .12s ease, box-shadow .12s ease;
-    }
-    .quick-item:hover{
-      transform:translateY(-2px);
-      box-shadow:0 10px 24px rgba(15,23,42,.08);
-    }
-    .quick-label{font-size:12px;margin-top:4px;}
-
-    .snap-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:10px;
+    .app-shell {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), #020617);
+      display: flex;
+      flex-direction: column;
     }
 
-    /* ASSIGNMENTS */
-    .assign-controls{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:8px;
-      margin-bottom:8px;
-    }
-    .input, .select{
-      padding:8px;
-      border-radius:10px;
-      border:1px solid #e5e7eb;
-      background:#fff;
-      font-size:13px;
-    }
-    .assign-list{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
-    .assign-row{
-      display:flex;
-      justify-content:space-between;
-      gap:8px;
-      align-items:center;
-    }
-    .assign-left{flex:1;}
-    .badge{
-      display:inline-block;
-      padding:4px 8px;
-      border-radius:999px;
-      font-size:11px;
-      background:#e0ebff;
-      color:var(--brand);
-      font-weight:600;
+    /* Top bar */
+    .topbar {
+      padding: 14px 18px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
     }
 
-    /* PROFILE */
-    .profile-card{text-align:center;}
-    .avatar{
-      width:90px;
-      height:90px;
-      border-radius:24px;
-      background:#ffffff;
-      margin:0 auto 8px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-      box-shadow:0 10px 26px rgba(15,23,42,.15);
-    }
-    .avatar span{
-      font-weight:800;
-      font-size:26px;
-      color:var(--brand);
-    }
-    .profile-name{font-weight:800;font-size:18px;margin-top:4px;}
-    .profile-degree{font-size:13px;color:var(--muted);}
-    .profile-info{
-      text-align:left;
-      margin-top:14px;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-    .profile-row{
-      background:#f9fbff;
-      border-radius:12px;
-      padding:8px 10px;
-      font-size:13px;
-    }
-    .profile-label{font-weight:600;font-size:12px;color:var(--muted);}
-
-    /* ID CARD PREVIEW */
-    .id-preview-wrapper{
-      margin-top:12px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:4px;
-      cursor:pointer;
-    }
-    .id-preview-image{
-      width:100%;
-      max-width:260px;
-      border-radius:16px;
-      box-shadow:0 10px 26px rgba(15,23,42,.4);
-      object-fit:contain;
-      transition:transform .15s ease, box-shadow .15s ease;
-    }
-    .id-preview-wrapper:active .id-preview-image{
-      transform:scale(0.97);
-      box-shadow:0 6px 18px rgba(15,23,42,.35);
+    .topbar-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
 
-    /* ID IMAGE FULLSCREEN */
-    .id-fullscreen-wrapper{
-      width:100%;
-      height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .id-fullscreen-image{
-      height:55vh;          /* smaller for tall phones */
-      max-width:80vw;
-      width:auto;
-      display:block;
-      margin:0 auto;
-      border-radius:20px;
-      object-fit:contain;
-      transform:rotate(90deg); /* vertical */
-      box-shadow:0 18px 40px rgba(15,23,42,.4);
+    .topbar-title span:first-child {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    /* MAP FULLSCREEN */
-    .map-fullscreen-wrapper{
-      width:100%;
-      height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .map-fullscreen-image{
-      width:100vw;
-      height:100vh;
-      object-fit:contain;
-      display:block;
+    .topbar-title span:last-child {
+      font-size: 18px;
+      font-weight: 600;
     }
 
-    /* MODAL */
-    .modal-backdrop{
-      position:fixed;
-      inset:0;
-      background:rgba(255,255,255,0.0); /* transparent but blurred */
-      backdrop-filter:blur(18px) saturate(120%);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:40;
-    }
-    .modal{
-      background:rgba(255,255,255,0.98);
-      width:min(420px,94vw);
-      border-radius:16px;
-      padding:14px 14px 16px;
-      box-shadow:0 20px 40px rgba(15,23,42,.45);
-      max-height:90vh;
-      overflow:auto;
-      transform:translateY(0);
-      opacity:1;
-      transition:transform .2s ease, opacity .2s ease;
-    }
-    .modal-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:8px;
-    }
-    .modal-head h3{font-size:16px;}
-    .modal-body{font-size:13px;color:#111827;}
-
-    .btn-link{
-      border:0;
-      background:#eef2ff;
-      padding:7px 10px;
-      border-radius:10px;
-      font-size:13px;
-      cursor:pointer;
+    .topbar-tag {
+      padding: 4px 10px;
+      font-size: 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* FULLSCREEN MODAL + animations */
-    @keyframes modalEnter{
-      from{transform:translateY(40px);opacity:0;}
-      to{transform:translateY(0);opacity:1;}
-    }
-    @keyframes modalExitUp{
-      from{transform:translateY(0);opacity:1;}
-      to{transform:translateY(-40px);opacity:0;}
+    .topbar-tag-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
     }
 
-    .modal-fullscreen{
-      width:100vw;
-      height:100vh;
-      max-width:none;
-      border-radius:0;
-      display:flex;
-      flex-direction:column;
-      padding:14px 14px 20px;
-      animation:modalEnter .25s ease-out;
-    }
-    .modal-fullscreen .modal-body{
-      flex:1;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .modal-fullscreen.modal-closing{
-      animation:modalExitUp .22s ease-in forwards;
+    /* Main content */
+    .content {
+      flex: 1;
+      padding: 4px 14px 72px;
+      overflow-y: auto;
     }
 
-    /* BOTTOM NAV */
-    .bottom-nav{
-      position:fixed;
-      left:8px;
-      right:8px;
-      bottom:10px;
-      background:#ffffff;
-      border-radius:18px;
-      padding:6px 4px;
-      display:flex;
-      justify-content:space-around;
-      box-shadow:0 10px 30px rgba(15,23,42,.18);
-      z-index:30;
-    }
-    .nav-item{
-      flex:1;
-      text-align:center;
-      font-size:11px;
-      color:var(--muted);
-      cursor:pointer;
-      padding:4px 0;
-    }
-    .nav-item span{
-      display:block;
-      margin-top:2px;
-    }
-    .nav-item.active{
-      color:var(--brand);
-      font-weight:600;
+    .section {
+      display: none;
+      animation: fadeIn 0.22s ease-out;
     }
 
-    @media (min-width:900px){
-      main{padding-top:16px;}
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #e5e7eb;
+    }
+
+    .section-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    /* Cards */
+    .card {
+      background: radial-gradient(circle at top left, #1f2937 0, #020617 55%);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      padding: 14px 14px 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .primary-text {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .muted-text {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Home – timetable */
+    .timetable-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .timetable-slot {
+      padding: 8px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .timetable-slot span:first-child {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .timetable-slot span:last-child {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    /* Home – banner for students image */
+    .home-banner {
+      margin-top: 12px;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: #020617;
+    }
+
+    .home-banner img {
+      display: block;
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+    }
+
+    .home-banner-caption {
+      padding: 8px 10px;
+      font-size: 11px;
+      color: var(--muted);
+      background: radial-gradient(circle at top, rgba(30, 64, 175, 0.3), #020617 70%);
+    }
+
+    /* Assignments */
+    .assignment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .assignment-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .assignment-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .assignment-title {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .assignment-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .assignment-pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.18);
+      border: 1px solid rgba(59, 130, 246, 0.55);
+      color: #bfdbfe;
+    }
+
+    /* Profile */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .profile-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 10%, #38bdf8, #1d4ed8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.7);
+    }
+
+    .profile-name {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .profile-id {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .info-value {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 11px;
+      border-radius: 999px;
+      border: none;
+      outline: none;
+      background: radial-gradient(circle at top left, #2563eb, #1d4ed8);
+      color: white;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 12px 25px rgba(37, 99, 235, 0.5);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
+    }
+
+    /* Classes section – electronics background */
+    .classes-section {
+      position: relative;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: #020617;
+      min-height: 200px;
+    }
+
+    .classes-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url("electronics-bg.jpg");
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.35) saturate(1.2);
+    }
+
+    .classes-overlay {
+      position: relative;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      color: #e5e7eb;
+    }
+
+    .classes-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      font-size: 11px;
+      color: #e5e7eb;
+      backdrop-filter: blur(10px);
+    }
+
+    .classes-blurb {
+      font-size: 12px;
+      max-width: 270px;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .classes-status {
+      margin-top: 6px;
+      font-size: 11px;
+      color: #e5e7eb;
+      opacity: 0.95;
+    }
+
+    /* Settings */
+    .settings-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .settings-item {
+      padding: 10px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .settings-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .settings-value {
+      font-size: 13px;
+      font-weight: 500;
+      color: #e5e7eb;
+    }
+
+    .settings-note {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 12px;
+      width: 100%;
+      max-width: 480px;
+      padding: 0 14px;
+      z-index: 20;
+    }
+
+    .bottom-nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(16px);
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 6px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
+    }
+
+    .nav-btn {
+      flex: 1;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      padding: 6px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      cursor: pointer;
+    }
+
+    .nav-btn span.icon {
+      font-size: 16px;
+    }
+
+    .nav-btn.active {
+      background: radial-gradient(circle at top, rgba(37, 99, 235, 0.28), rgba(15, 23, 42, 0.9));
+      color: #e5e7eb;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.55);
+    }
+
+    .nav-btn-label {
+      font-size: 10px;
+    }
+
+    /* ID card full-screen overlay */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      padding: 12px;
+    }
+
+    .overlay.active {
+      display: flex;
+    }
+
+    .overlay-inner {
+      background: #020617;
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      max-width: 380px;
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .overlay-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .overlay-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .overlay-close {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .overlay-img-wrap {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: #000;
+    }
+
+    .overlay-img-wrap img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .overlay-footer {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
     }
   </style>
 </head>
 <body>
-
-<header class="topbar" role="banner">
-  <div class="logo">
-    <img src="icons/icon-192.png" alt="Portal logo">
-  </div>
-  <div class="header-text">
-    <div class="header-title" id="appTitle">Student Portal — Home</div>
-    <div class="header-sub">Welcome, <span id="welcomeName">Student</span></div>
-  </div>
-  <div class="header-actions">
-    <!-- SETTINGS ICON -->
-    <button aria-label="Settings" onclick="openSettings()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-        <path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" stroke="currentColor" stroke-width="1.8"/>
-        <path d="M4.5 13.5v-3l1.7-.6a1 1 0 0 0 .6-.6l.5-1.6 2.8-1 1.2 1a1 1 0 0 0 .7.3h1.8a1 1 0 0 0 .7-.3l1.2-1 2.8 1 .5 1.6a1 1 0 0 0 .6.6l1.7.6v3l-1.7.6a1 1 0 0 0-.6.6l-.5 1.6-2.8 1-1.2-1a1 1 0 0 0-.7-.3h-1.8a1 1 0 0 0-.7.3l-1.2 1-2.8-1-.5-1.6a1 1 0 0 0-.6-.6l-1.7-.6Z"
-              stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
-  </div>
-</header>
-
-<main>
-  <!-- HOME -->
-  <section id="homePage" class="page active">
-    <div class="card">
-      <div class="home-top">
-        <div class="home-top-main">
-          <div class="small muted">Today</div>
-          <div class="home-top-title">No upcoming classes</div>
-          <div class="home-top-sub">You don't have any classes scheduled today.</div>
-        </div>
+  <div class="app-shell">
+    <!-- Top bar -->
+    <div class="topbar">
+      <div class="topbar-title">
+        <span>Student Portal</span>
+        <span>Luciano Jesse Rostiroll</span>
+      </div>
+      <div class="topbar-tag">
+        <span class="topbar-tag-dot"></span>
+        <span>Online</span>
       </div>
     </div>
 
-    <div class="card">
-      <div class="home-top">
-        <div>
-          <div class="small muted">Quick actions</div>
-          <div class="home-top-title">Open tools & links</div>
+    <!-- Main content -->
+    <div class="content">
+      <!-- HOME -->
+      <section id="homeSection" class="section active">
+        <div class="section-title">
+          <span>Today</span>
+          <span class="muted-text" style="font-size:11px;">Overview</span>
         </div>
-      </div>
-      <div class="quick-grid">
-        <!-- NOTES instead of email -->
-        <div class="quick-item" onclick="openNotes()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <rect x="4" y="3" width="16" height="18" rx="2" stroke="#1159c4" stroke-width="1.6"/>
-            <path d="M8 8h8M8 12h5" stroke="#1159c4" stroke-width="1.6" stroke-linecap="round"/>
-          </svg>
-          <div class="quick-label">Notes</div>
+
+        <!-- Timetable card -->
+        <div class="card">
+          <div class="card-header-row">
+            <div>
+              <div class="primary-text">Today’s timetable</div>
+              <div class="muted-text">Quick view of your next classes</div>
+            </div>
+            <div class="chip">
+              <span class="chip-dot"></span>
+              <span>Week A</span>
+            </div>
+          </div>
+
+          <div class="timetable-grid">
+            <div class="timetable-slot">
+              <span>08:45 – 09:45</span>
+              <span>Maths</span>
+            </div>
+            <div class="timetable-slot">
+              <span>09:50 – 10:50</span>
+              <span>Physics</span>
+            </div>
+            <div class="timetable-slot">
+              <span>11:10 – 12:10</span>
+              <span>Electronics</span>
+            </div>
+            <div class="timetable-slot">
+              <span>13:00 – 14:00</span>
+              <span>Programming</span>
+            </div>
+          </div>
         </div>
-        <!-- Functional map -->
-        <div class="quick-item" onclick="openCampusMap()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M6 4l6-2 6 2v16l-6 2-6-2V4z" stroke="#1159c4" stroke-width="1.6" stroke-linejoin="round"/>
-            <path d="M12 2v18" stroke="#1159c4" stroke-width="1.6" stroke-linejoin="round"/>
-          </svg>
-          <div class="quick-label">Campus map</div>
+
+        <!-- Banner under timetable for students image -->
+        <div class="home-banner">
+          <!-- Put your students image here -->
+          <img src="students-banner.jpg" alt="Students banner" />
+          <div class="home-banner-caption">
+            Banner area for student image — replace <code>students-banner.jpg</code> with your own photo.
+          </div>
         </div>
-        <div class="quick-item" onclick="switchTo('assignments')">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <rect x="3" y="4" width="18" height="16" rx="2" stroke="#1159c4" stroke-width="1.6"/>
-            <path d="M8 9h8" stroke="#1159c4" stroke-width="1.6" stroke-linecap="round"/>
-          </svg>
-          <div class="quick-label">Assignments</div>
+
+        <!-- Quick status card -->
+        <div class="card">
+          <div class="primary-text">At a glance</div>
+          <div class="muted-text" style="margin-bottom:6px;">Assignments and portal status</div>
+          <div class="assignment-list">
+            <div class="assignment-item">
+              <div class="assignment-main">
+                <span class="assignment-title">Assignments due</span>
+                <span class="assignment-meta">8 active · 2 due this week</span>
+              </div>
+              <span class="assignment-pill">View all</span>
+            </div>
+            <div class="assignment-item">
+              <div class="assignment-main">
+                <span class="assignment-title">Portal status</span>
+                <span class="assignment-meta">All systems running normally</span>
+              </div>
+              <span class="assignment-pill" style="background:rgba(34,197,94,0.20);border-color:rgba(34,197,94,0.7);color:#bbf7d0;">
+                OK
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
+
+      <!-- CLASSES -->
+      <section id="classesSection" class="section">
+        <div class="section-title">
+          <span>Classes</span>
+          <span class="muted-text" style="font-size:11px;">Electronics themed</span>
+        </div>
+
+        <div class="classes-section">
+          <div class="classes-bg"></div>
+          <div class="classes-overlay">
+            <div class="classes-badge">
+              <span>⚡</span>
+              <span>Electronics Focus</span>
+            </div>
+            <div class="classes-blurb">
+              Your classes area is themed with an electronics background. Use this screen to list your subjects or lab times.
+            </div>
+            <div class="classes-status">
+              No classes are listed here yet. You can just keep this as a cool background if you like.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ASSIGNMENTS (with extra ones) -->
+      <section id="assignmentsSection" class="section">
+        <div class="section-title">
+          <span>Assignments</span>
+          <span class="muted-text" style="font-size:11px;">8 active</span>
+        </div>
+
+        <div class="card">
+          <div class="section-subtitle">Upcoming work</div>
+          <div class="assignment-list">
+            <!-- First four (original style) -->
+            <div class="assignment-item">
+              <div class="assignment-main">
+                <span class="assignment-title">Maths – Trigonometry Worksheet</span>
+                <span class="assignment-meta">Due: 12 Dec · Weight: 10%</span>
+              </div>
+              <span class="assignment-pill">In progress</span>
+            </div>
+            <div class="assignment-item">
+              <div class="assignment-main">
+                <span class="assignment-title">Physics – Motion Lab Report</span>
+                <span class="assignment-meta">Due: 14 Dec · Weight: 15%</span>
+              </div>
+              <span class="assignment-pill">Not started</span>
+            </div>
+            <div class="assignment-item">
+              <div class="assignment-main">
+                <span class="assignment-title">Electronics – PCB Design Task</span>
+                <span class="assignment-meta">Due: 18 Dec · Weight: 20%</span>
+              </div>
+              <span class="assignment-pill">In progress</span>
+            </div>
+            <div class="assignment-item">
+              <div class="assignment-main">
+                <span class="assignment-title">Programming – Array Practice</span>
+                <span class="assignment-meta">Due: 20 Dec · Weight: 10%</span>
+              </div>
+              <span class="assignment-pill">In progress</span>
+            </div>
+
+            <!-- Extra four assignments you asked for -->
+            <div class="assignment-item">
+              <div class="assignment-main">
+                <span class="assignment-title">Maths – Exam Revision Set</span>
+                <span class="assignment-meta">Due: 22 Dec · Weight: 5%</span>
+              </div>
+              <span class="assignment-pill">Not started</span>
+            </div>
+            <div class="assignment-item">
+              <div class="assignment-main">
+                <span class="assignment-title">Physics – Energy Problems</span>
+                <span class="assignment-meta">Due: 23 Dec · Weight: 5%</span>
+              </div>
+              <span class="assignment-pill">In progress</span>
+            </div>
+            <div class="assignment-item">
+              <div class="assignment-main">
+                <span class="assignment-title">Electronics – Soldering Practice Log</span>
+                <span class="assignment-meta">Due: 26 Dec · Weight: 5%</span>
+              </div>
+              <span class="assignment-pill">Not started</span>
+            </div>
+            <div class="assignment-item">
+              <div class="assignment-main">
+                <span class="assignment-title">Programming – Mini Project</span>
+                <span class="assignment-meta">Due: 30 Dec · Weight: 15%</span>
+              </div>
+              <span class="assignment-pill">In progress</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROFILE (only email + phone in contact section, ID card button) -->
+      <section id="profileSection" class="section">
+        <div class="section-title">
+          <span>Profile</span>
+          <span class="muted-text" style="font-size:11px;">ID & contact</span>
+        </div>
+
+        <div class="card">
+          <div class="profile-header">
+            <div class="profile-avatar">LJ</div>
+            <div>
+              <div class="profile-name">Luciano Jesse Rostiroll</div>
+              <div class="profile-id">Student ID • 123 456 789</div>
+            </div>
+          </div>
+          <button class="btn" id="openIdCardBtn">
+            <span>🎫</span>
+            <span>Show ID Card</span>
+          </button>
+        </div>
+
+        <div class="card">
+          <div class="section-subtitle">Contact details</div>
+          <!-- ONLY email + phone as requested -->
+          <div class="info-row">
+            <div class="info-label">Email</div>
+            <div class="info-value">luciano@example.com</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Phone</div>
+            <div class="info-value">+61 ••• ••• •••</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS (help desk support fixed, not editable) -->
+      <section id="settingsSection" class="section">
+        <div class="section-title">
+          <span>Settings</span>
+          <span class="muted-text" style="font-size:11px;">Support</span>
+        </div>
+
+        <div class="card">
+          <div class="section-subtitle">Support & help desk</div>
+          <div class="settings-list">
+            <div class="settings-item">
+              <div class="settings-label">Help desk support</div>
+              <div class="settings-value">G’Day Parks – using their terms & conditions</div>
+              <div class="settings-note">
+                This text is fixed and not editable in the app. Contact the help desk directly if you need changes.
+              </div>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-label">Support email</div>
+              <div class="settings-value">support@example.com</div>
+              <div class="settings-note">
+                For booking issues, refunds, or portal problems.
+              </div>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-label">Support phone</div>
+              <div class="settings-value">1300 000 000</div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
-    <div class="card">
-      <div class="snap-header">
-        <div>
-          <div class="small muted">Timetable</div>
-          <div class="home-top-title">No classes this week</div>
-        </div>
-      </div>
-      <div class="small muted">When you add subjects, they'll appear here.</div>
-    </div>
-  </section>
-
-  <!-- TIMETABLE (empty) -->
-  <section id="timetablePage" class="page">
-    <div class="card">
-      <div class="home-top">
-        <div>
-          <div class="small muted">My timetable</div>
-          <div class="home-top-title">No classes</div>
-        </div>
-      </div>
-      <div style="margin-top:8px" class="small muted">
-        You currently don't have any classes in your timetable.
-      </div>
-    </div>
-  </section>
-
-  <!-- ASSIGNMENTS -->
-  <section id="assignmentsPage" class="page">
-    <div class="card">
-      <div class="home-top">
-        <div>
-          <div class="small muted">Track your work</div>
-          <div class="home-top-title">Assignments & grades</div>
-        </div>
-        <div>
-          <span class="small muted">Average</span>
-          <span id="avgBadge" class="badge">--%</span>
-        </div>
-      </div>
-
-      <div class="assign-controls">
-        <select id="filterUnit" class="select" onchange="renderAssignments()">
-          <option value="all">All units</option>
-        </select>
-        <select id="filterStatus" class="select" onchange="renderAssignments()">
-          <option value="all">All statuses</option>
-          <option value="submitted">Submitted</option>
-          <option value="pending">Pending</option>
-          <option value="overdue">Overdue</option>
-        </select>
-        <select id="sortBy" class="select" onchange="renderAssignments()">
-          <option value="due_asc">Due — soonest</option>
-          <option value="due_desc">Due — latest</option>
-          <option value="grade_desc">Grade — high → low</option>
-          <option value="grade_asc">Grade — low → high</option>
-        </select>
-      </div>
-
-      <div id="assignList" class="assign-list"></div>
-
-      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn-link" onclick="openAddAssignment()">+ Add assignment</button>
-        <button class="btn-link" onclick="exportAssignments()">Export JSON</button>
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+      <div class="bottom-nav-inner">
+        <button class="nav-btn active" data-target="homeSection">
+          <span class="icon">🏠</span>
+          <span class="nav-btn-label">Home</span>
+        </button>
+        <button class="nav-btn" data-target="classesSection">
+          <span class="icon">📚</span>
+          <span class="nav-btn-label">Classes</span>
+        </button>
+        <button class="nav-btn" data-target="assignmentsSection">
+          <span class="icon">✅</span>
+          <span class="nav-btn-label">Assignments</span>
+        </button>
+        <button class="nav-btn" data-target="profileSection">
+          <span class="icon">👤</span>
+          <span class="nav-btn-label">Profile</span>
+        </button>
+        <button class="nav-btn" data-target="settingsSection">
+          <span class="icon">⚙️</span>
+          <span class="nav-btn-label">Settings</span>
+        </button>
       </div>
     </div>
-  </section>
-
-  <!-- PROFILE -->
-  <section id="profilePage" class="page">
-    <div class="card profile-card">
-      <div class="avatar"><span id="avatarInitials">LJ</span></div>
-      <div class="profile-name" id="profileName">Luciano Jesse Rostirolla</div>
-      <div class="profile-degree" id="profileDegree">Bachelor of Electrical Engineering</div>
-
-      <div class="id-preview-wrapper" onclick="openIdCard()">
-        <img src="id-card.png" alt="Student ID card" class="id-preview-image">
-        <div class="small muted">Tap to view full screen</div>
-      </div>
-
-      <div class="profile-info">
-        <div class="profile-row">
-          <div class="profile-label">Student ID</div>
-          <div id="profileID">739148265</div>
-        </div>
-        <div class="profile-row">
-          <div class="profile-label">Date of birth</div>
-          <div id="profileDOB">2/11/2006</div>
-        </div>
-      </div>
-
-      <!-- Edit profile button removed on purpose -->
-    </div>
-  </section>
-</main>
-
-<!-- MODAL -->
-<div id="modal" class="modal-backdrop" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div class="modal-head">
-      <h3 id="modalTitle">Modal</h3>
-      <button class="btn-link" onclick="closeModal()">Close</button>
-    </div>
-    <div id="modalBody" class="modal-body"></div>
   </div>
-</div>
 
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <div class="nav-item active" data-page="home" onclick="switchTo('home')">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M3 11.5L12 5l9 6.5" stroke="currentColor" stroke-width="1.6"
-            stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M5 21V11h14v10" stroke="currentColor" stroke-width="1.6"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <span>Home</span>
-  </div>
-  <div class="nav-item" data-page="timetable" onclick="switchTo('timetable')">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/>
-      <path d="M16 2v4M8 2v4" stroke="currentColor" stroke-width="1.6"/>
-    </svg>
-    <span>Timetable</span>
-  </div>
-  <div class="nav-item" data-page="assignments" onclick="switchTo('assignments')">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/>
-      <path d="M9 8h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-    </svg>
-    <span>Assignments</span>
-  </div>
-  <div class="nav-item" data-page="profile" onclick="switchTo('profile')">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.6"/>
-      <path d="M6 20c1.5-3 5-5 6-5s4.5 2 6 5" stroke="currentColor" stroke-width="1.6"
-            stroke-linecap="round"/>
-    </svg>
-    <span>Profile</span>
-  </div>
-</nav>
-
-<script>
-  /* STATE */
-  const defaultProfile = {
-    name:"Luciano Jesse Rostirolla",
-    degree:"Bachelor of Electrical Engineering",
-    id:"739148265",
-    dob:"2/11/2006",
-    email:"john@example.com",
-    phone:"—",
-    helpdesk:"Not set"
-  };
-
-  const demoAssignments = [
-    {
-      id:"a1",
-      unit:"ELEC 101",
-      title:"DC Circuits Lab Report",
-      due:"2025-03-15",
-      status:"submitted",
-      grade:82,
-      notes:"Completed lab and analysis on Ohm's law and Kirchhoff's laws."
-    },
-    {
-      id:"a2",
-      unit:"ELEC 130",
-      title:"Intro to Programming for Engineers",
-      due:"2025-03-28",
-      status:"submitted",
-      grade:88,
-      notes:"C program to sample sensor data and calculate RMS voltage."
-    },
-    {
-      id:"a3",
-      unit:"ELEC 150",
-      title:"Logic Gates & Digital Systems Quiz",
-      due:"2025-04-02",
-      status:"submitted",
-      grade:75,
-      notes:"K-maps and combinational circuit design."
-    },
-    {
-      id:"a4",
-      unit:"ELEC 180",
-      title:"PCB Schematic Assignment",
-      due:"2025-04-18",
-      status:"pending",
-      grade:null,
-      notes:"Design a simple power supply + microcontroller interface."
-    },
-    {
-      id:"a5",
-      unit:"MATH 120",
-      title:"Engineering Mathematics Test",
-      due:"2025-03-05",
-      status:"submitted",
-      grade:69,
-      notes:"Complex numbers and phasors."
-    }
-  ];
-
-  /* IMPORTANT: new key so old data doesn't override */
-  let state = JSON.parse(localStorage.getItem("sp_state_v2") || "null");
-  if(!state){
-    state = {profile:defaultProfile,assignments:demoAssignments};
-    localStorage.setItem("sp_state_v2",JSON.stringify(state));
-  }
-
-  function persist(){
-    localStorage.setItem("sp_state_v2",JSON.stringify(state));
-  }
-
-  /* NAVIGATION */
-  function switchTo(page){
-    const map = {home:"homePage",timetable:"timetablePage",assignments:"assignmentsPage",profile:"profilePage"};
-    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-    document.getElementById(map[page]).classList.add("active");
-    document.querySelectorAll(".nav-item").forEach(n=>{
-      n.classList.toggle("active", n.dataset.page===page);
-    });
-    const titleMap={home:"Home",timetable:"Timetable",assignments:"Assignments",profile:"Profile"};
-    document.getElementById("appTitle").innerText="Student Portal — "+titleMap[page];
-    if(page==="assignments") renderAssignments();
-    if(page==="profile") renderProfile();
-  }
-
-  /* PROFILE */
-  function renderProfile(){
-    const p=state.profile;
-    document.getElementById("profileName").innerText=p.name;
-    document.getElementById("profileDegree").innerText=p.degree;
-    document.getElementById("profileID").innerText=p.id;
-    document.getElementById("profileDOB").innerText=p.dob || "";
-    const first=p.name.split(" ")[0]||"Student";
-    document.getElementById("welcomeName").innerText=first;
-    const initials=(p.name.split(" ").map(s=>s[0]).join("").slice(0,2)||"SP").toUpperCase();
-    document.getElementById("avatarInitials").innerText=initials;
-  }
-
-  function editProfile(){
-    const p=state.profile;
-    const body=`
-      <label>Full name<br><input id="pf_name" class="input" value="${escapeHtml(p.name)}"></label><br>
-      <label>Degree<br><input id="pf_deg" class="input" value="${escapeHtml(p.degree)}"></label><br>
-      <label>Student ID<br><input id="pf_id" class="input" value="${escapeHtml(p.id)}"></label><br>
-      <label>Date of birth<br><input id="pf_dob" class="input" value="${escapeHtml(p.dob || "")}" placeholder="2/11/2006"></label><br>
-      <button class="btn-link" onclick="saveProfile()">Save</button>
-    `;
-    openModal("Edit profile",body);
-  }
-
-  function saveProfile(){
-    const p=state.profile;
-    p.name=document.getElementById("pf_name").value||p.name;
-    p.degree=document.getElementById("pf_deg").value||p.degree;
-    p.id=document.getElementById("pf_id").value||p.id;
-    p.dob=document.getElementById("pf_dob").value||p.dob;
-    persist();
-    renderProfile();
-    closeModal();
-  }
-
-  /* SETTINGS */
-  function openSettings(){
-    const p=state.profile;
-    const body = `
-      <label>Email<br>
-        <input id="set_email" class="input" value="${escapeHtml(p.email || "")}">
-      </label><br>
-      <label>Phone number<br>
-        <input id="set_phone" class="input" value="${escapeHtml(p.phone || "")}">
-      </label><br>
-      <label>Help desk support<br>
-        <textarea id="set_helpdesk" class="input" rows="3" placeholder="e.g. 08 1234 5678 · support@example.com">${escapeHtml(p.helpdesk || "")}</textarea>
-      </label><br>
-      <button class="btn-link" onclick="saveSettings()">Save</button>
-    `;
-    openModal("Settings", body);
-  }
-
-  function saveSettings(){
-    const p=state.profile;
-    p.email = document.getElementById("set_email").value || p.email;
-    p.phone = document.getElementById("set_phone").value || p.phone;
-    p.helpdesk = document.getElementById("set_helpdesk").value || "Not set";
-    persist();
-    renderProfile();
-    closeModal();
-  }
-
-  /* NOTES (quick action) */
-  function openNotes(){
-    const existing = localStorage.getItem("sp_notes") || "";
-    const body = `
-      <label>Notes<br>
-        <textarea id="notesArea" class="input" rows="8" style="width:100%;resize:vertical;">${escapeHtml(existing)}</textarea>
-      </label><br>
-      <button class="btn-link" onclick="saveNotes()">Save</button>
-    `;
-    openModal("Notes", body);
-  }
-  function saveNotes(){
-    const val = document.getElementById("notesArea").value || "";
-    localStorage.setItem("sp_notes", val);
-    closeModal();
-  }
-
-  /* CAMPUS MAP (quick action) */
-  function openCampusMap(){
-    const body = `
-      <div class="map-fullscreen-wrapper">
-        <img src="campus-map.png" alt="Campus map" class="map-fullscreen-image">
+  <!-- ID card overlay -->
+  <div id="idCardOverlay" class="overlay">
+    <div class="overlay-inner">
+      <div class="overlay-header">
+        <div class="overlay-title">Student ID Card</div>
+        <button class="overlay-close" id="closeIdCardBtn">&times;</button>
       </div>
-    `;
-    openModal("Campus map", body, { fullscreen: true });
-  }
-
-  /* FULLSCREEN ID CARD */
-  function openIdCard(){
-    const body = `
-      <div class="id-fullscreen-wrapper">
-        <img src="id-card.png" alt="Student ID card" class="id-fullscreen-image">
+      <div class="overlay-img-wrap">
+        <!-- Your full-screen ID card image -->
+        <img src="id-card.png" alt="ID Card for Luciano Jesse Rostiroll" />
       </div>
-    `;
-    openModal("Student ID card", body, { fullscreen: true });
-  }
+      <div class="overlay-footer">
+        Tap anywhere outside this card or press × to close.
+      </div>
+    </div>
+  </div>
 
-  /* ASSIGNMENTS */
-  function renderAssignments(){
-    const list=document.getElementById("assignList");
-    list.innerHTML="";
-    const unitSelect=document.getElementById("filterUnit");
-    const statusFilter=document.getElementById("filterStatus").value;
-    const sortBy=document.getElementById("sortBy").value;
+  <script>
+    // Tab switching
+    const navButtons = document.querySelectorAll(".nav-btn");
+    const sections = document.querySelectorAll(".section");
 
-    const units=[...new Set(state.assignments.map(a=>a.unit))];
-    unitSelect.innerHTML='<option value="all">All units</option>'+units.map(u=>`<option value="${u}">${u}</option>`).join("");
-    let items=[...state.assignments];
+    navButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const targetId = btn.getAttribute("data-target");
 
-    const uVal=unitSelect.value;
-    if(uVal!=="all") items=items.filter(a=>a.unit===uVal);
-    if(statusFilter!=="all") items=items.filter(a=>a.status===statusFilter);
+        // Toggle active nav button
+        navButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
 
-    items.sort((a,b)=>{
-      if(sortBy==="due_asc") return new Date(a.due)-new Date(b.due);
-      if(sortBy==="due_desc") return new Date(b.due)-new Date(a.due);
-      if(sortBy==="grade_desc") return (b.grade||0)-(a.grade||0);
-      if(sortBy==="grade_asc") return (a.grade||0)-(b.grade||0);
-      return 0;
-    });
-
-    const graded=state.assignments.filter(a=>typeof a.grade==="number");
-    const avg=graded.length?Math.round(graded.reduce((s,x)=>s+x.grade,0)/graded.length):0;
-    document.getElementById("avgBadge").innerText=graded.length?avg+"%":"--%";
-
-    if(!items.length){
-      list.innerHTML='<div class="small muted">No assignments match your filters.</div>';
-      return;
-    }
-    items.forEach(a=>{
-      const dueStr=isNaN(new Date(a.due))?"—":new Date(a.due).toLocaleDateString();
-      const row=document.createElement("div");
-      row.className="card assign-row";
-      row.innerHTML=`
-        <div class="assign-left">
-          <div><strong>${escapeHtml(a.title)}</strong></div>
-          <div class="small muted">${escapeHtml(a.unit)} · Due ${dueStr}</div>
-        </div>
-        <div style="text-align:right">
-          <div><strong>${typeof a.grade==="number"?a.grade+"%":"—"}</strong></div>
-          <div class="small muted">${a.status}</div>
-          <button class="btn-link" onclick="openAssignment('${a.id}')">Open</button>
-        </div>
-      `;
-      list.appendChild(row);
-    });
-  }
-  function openAssignment(id){
-    const a=state.assignments.find(x=>x.id===id);
-    if(!a) return;
-    const body=`
-      <strong>${escapeHtml(a.title)}</strong><br>
-      <span class="small muted">${escapeHtml(a.unit)}</span><br><br>
-      <div><strong>Due:</strong> ${a.due}</div>
-      <div><strong>Status:</strong> ${a.status}</div>
-      <div><strong>Grade:</strong> ${typeof a.grade==="number"?a.grade+"%":"—"}</div><br>
-      <div><strong>Notes</strong><br>${escapeHtml(a.notes||"—")}</div><br>
-      <button class="btn-link" onclick="editAssignment('${a.id}')">Edit</button>
-      <button class="btn-link" onclick="deleteAssignment('${a.id}')">Delete</button>
-    `;
-    openModal("Assignment",body);
-  }
-  function openAddAssignment(){
-    const body=formMarkup();
-    openModal("Add assignment",body);
-  }
-  function editAssignment(id){
-    const a=state.assignments.find(x=>x.id===id);
-    if(!a) return;
-    openModal("Edit assignment",formMarkup(a));
-  }
-  function formMarkup(a={id:"",unit:"",title:"",due:"",status:"pending",grade:"",notes:""}){
-    const units=[...new Set(state.assignments.map(x=>x.unit))];
-    const unitOptions='<option value="">Select unit</option>'+units.map(u=>`<option value="${escapeHtml(u)}" ${a.unit===u?"selected":""}>${escapeHtml(u)}</option>`).join("");
-    return `
-      <label>Unit<br>
-        <select id="fa_unit" class="select">${unitOptions}</select>
-      </label><br>
-      <label>Title<br>
-        <input id="fa_title" class="input" value="${escapeHtml(a.title)}">
-      </label><br>
-      <label>Due date<br>
-        <input id="fa_due" class="input" type="date" value="${a.due}">
-      </label><br>
-      <label>Status<br>
-        <select id="fa_status" class="select">
-          <option value="pending" ${a.status==="pending"?"selected":""}>Pending</option>
-          <option value="submitted" ${a.status==="submitted"?"selected":""}>Submitted</option>
-          <option value="overdue" ${a.status==="overdue"?"selected":""}>Overdue</option>
-        </select>
-      </label><br>
-      <label>Grade (0–100)<br>
-        <input id="fa_grade" class="input" type="number" min="0" max="100" value="${a.grade??""}">
-      </label><br>
-      <label>Notes<br>
-        <textarea id="fa_notes" class="input" rows="3">${escapeHtml(a.notes||"")}</textarea>
-      </label><br>
-      <button class="btn-link" onclick="saveAssignment('${a.id||""}')">Save</button>
-    `;
-  }
-  function saveAssignment(id){
-    const unit=document.getElementById("fa_unit").value||"Unspecified";
-    const title=document.getElementById("fa_title").value||"Untitled";
-    const due=document.getElementById("fa_due").value||"";
-    const status=document.getElementById("fa_status").value||"pending";
-    const gradeVal=document.getElementById("fa_grade").value;
-    const grade=gradeVal===""?null:Number(gradeVal);
-    const notes=document.getElementById("fa_notes").value||"";
-    if(!id){
-      const nid="a"+Math.random().toString(36).slice(2,9);
-      state.assignments.push({id:nid,unit,title,due,status,grade,notes});
-    }else{
-      const a=state.assignments.find(x=>x.id===id);
-      if(a){a.unit=unit;a.title=title;a.due=due;a.status=status;a.grade=grade;a.notes=notes;}
-    }
-    persist();
-    closeModal();
-    renderAssignments();
-  }
-  function deleteAssignment(id){
-    if(!confirm("Delete this assignment?")) return;
-    state.assignments=state.assignments.filter(x=>x.id!==id);
-    persist();
-    closeModal();
-    renderAssignments();
-  }
-  function exportAssignments(){
-    const blob=new Blob([JSON.stringify(state.assignments,null,2)],{type:"application/json"});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");
-    a.href=url;
-    a.download="assignments.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  /* MODAL + swipe-up close */
-  function openModal(title,html,options={}){
-    const backdrop=document.getElementById("modal");
-    const dialog=backdrop.querySelector(".modal");
-    document.getElementById("modalTitle").innerText=title;
-    document.getElementById("modalBody").innerHTML=html;
-
-    dialog.classList.remove("modal-fullscreen","modal-closing");
-    dialog.style.transform="";
-    dialog.style.opacity="";
-
-    if(options.fullscreen){
-      dialog.classList.add("modal-fullscreen");
-    }
-
-    backdrop.style.display="flex";
-    backdrop.setAttribute("aria-hidden","false");
-  }
-
-  function closeModal(){
-    const backdrop=document.getElementById("modal");
-    const dialog=backdrop.querySelector(".modal");
-
-    if(dialog.classList.contains("modal-fullscreen")){
-      dialog.classList.add("modal-closing");
-      dialog.addEventListener("animationend", function handler(){
-        dialog.classList.remove("modal-closing","modal-fullscreen");
-        dialog.style.transform="";
-        dialog.style.opacity="";
-        backdrop.style.display="none";
-        backdrop.setAttribute("aria-hidden","true");
-        dialog.removeEventListener("animationend", handler);
+        // Toggle active section
+        sections.forEach((sec) => {
+          if (sec.id === targetId) {
+            sec.classList.add("active");
+          } else {
+            sec.classList.remove("active");
+          }
+        });
       });
-    } else {
-      backdrop.style.display="none";
-      backdrop.setAttribute("aria-hidden","true");
-    }
-  }
+    });
 
-  function escapeHtml(s){
-    if(!s) return "";
-    return String(s).replace(/[&<>\"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
-  }
-  function openFeature(name){alert("Open feature: "+name);}
+    // ID card overlay logic
+    const idCardOverlay = document.getElementById("idCardOverlay");
+    const openIdCardBtn = document.getElementById("openIdCardBtn");
+    const closeIdCardBtn = document.getElementById("closeIdCardBtn");
 
-  /* SWIPE UP TO CLOSE FULLSCREEN MODALS */
-  let touchStartY = null;
-  let touchCurrentY = null;
-  let isDraggingModal = false;
+    openIdCardBtn.addEventListener("click", () => {
+      idCardOverlay.classList.add("active");
+    });
 
-  function isModalFullscreen(){
-    const dialog=document.querySelector("#modal .modal");
-    return dialog && dialog.classList.contains("modal-fullscreen");
-  }
+    closeIdCardBtn.addEventListener("click", () => {
+      idCardOverlay.classList.remove("active");
+    });
 
-  function onModalTouchStart(e){
-    if(!isModalFullscreen()) return;
-    if(e.touches.length !== 1) return;
-    touchStartY = e.touches[0].clientY;
-    touchCurrentY = touchStartY;
-    isDraggingModal = true;
-  }
-
-  function onModalTouchMove(e){
-    if(!isDraggingModal || !isModalFullscreen()) return;
-    touchCurrentY = e.touches[0].clientY;
-    const diff = touchCurrentY - touchStartY;
-    const dialog=document.querySelector("#modal .modal");
-
-    // swipe UP only (diff < 0)
-    if(diff < 0 && dialog){
-      dialog.style.transform = `translateY(${diff}px)`;
-      dialog.style.opacity = String(Math.max(0.4, 1 - (-diff/300)));
-    }
-  }
-
-  function onModalTouchEnd(){
-    if(!isDraggingModal || !isModalFullscreen()) return;
-    const diff = touchCurrentY - touchStartY;
-    const dialog=document.querySelector("#modal .modal");
-
-    isDraggingModal = false;
-    touchStartY = null;
-    touchCurrentY = null;
-
-    if(!dialog) return;
-
-    dialog.style.transform = "";
-    dialog.style.opacity = "";
-
-    if(diff < -80){
-      closeModal();
-    }
-  }
-
-  // init
-  renderProfile();
-  renderAssignments();
-
-  const modalBackdrop=document.getElementById("modal");
-  modalBackdrop.addEventListener("click",e=>{
-    if(e.target===modalBackdrop) closeModal();
-  });
-  modalBackdrop.addEventListener("touchstart", onModalTouchStart, {passive:true});
-  modalBackdrop.addEventListener("touchmove", onModalTouchMove, {passive:true});
-  modalBackdrop.addEventListener("touchend", onModalTouchEnd, {passive:true});
-
-  document.addEventListener("keydown",e=>{if(e.key==="Escape") closeModal();});
-
-  if("serviceWorker" in navigator){
-    window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
-  }
-</script>
+    idCardOverlay.addEventListener("click", (e) => {
+      // Close when clicking outside inner card
+      if (e.target === idCardOverlay) {
+        idCardOverlay.classList.remove("active");
+      }
+    });
+  </script>
 </body>
 </html>
