@@ -1,145 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Student Portal - Luciano Jesse Rostiroll</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8">
+  <title>UniSA Student – Luciano Jesse Rostiroll</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
 
   <style>
     :root {
-      --bg: #050816;
-      --bg-soft: #0b1020;
-      --card: #111827;
-      --accent: #3b82f6;
-      --accent-soft: rgba(59, 130, 246, 0.15);
-      --text: #f9fafb;
-      --muted: #9ca3af;
-      --danger: #f97373;
-      --border: #1f2937;
-      --radius-xl: 18px;
+      --unisa-blue: #0055a2;
+      --unisa-blue-light: #1976d2;
+      --unisa-blue-soft: #e0efff;
+      --bg: #f2f4f7;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --text: #111827;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --radius-lg: 16px;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        sans-serif;
     }
 
     body {
-      background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
+      background: var(--bg);
       color: var(--text);
+      min-height: 100vh;
       display: flex;
       justify-content: center;
-      min-height: 100vh;
     }
 
-    .app-shell {
+    .app {
       width: 100%;
       max-width: 480px;
       min-height: 100vh;
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), #020617);
+      background: var(--bg);
       display: flex;
       flex-direction: column;
     }
 
-    /* Top bar */
-    .topbar {
-      padding: 14px 18px 6px;
+    /* HEADER (UniSA style) */
+    .app-header {
+      background: var(--unisa-blue);
+      color: #ffffff;
+      padding: 10px 14px 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
     }
 
-    .topbar-title {
+    .header-left {
       display: flex;
       flex-direction: column;
       gap: 2px;
     }
 
-    .topbar-title span:first-child {
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .topbar-title span:last-child {
-      font-size: 18px;
+    .header-title {
+      font-size: 16px;
       font-weight: 600;
     }
 
-    .topbar-tag {
-      padding: 4px 10px;
+    .header-sub {
       font-size: 11px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      opacity: 0.9;
     }
 
-    .topbar-tag-dot {
+    .header-tag {
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .header-tag-dot {
       width: 7px;
       height: 7px;
       border-radius: 999px;
       background: #22c55e;
-      box-shadow: 0 0 8px #22c55e;
     }
 
-    /* Main content */
+    /* MAIN CONTENT */
     .content {
       flex: 1;
-      padding: 4px 14px 72px;
+      padding: 10px 10px 70px;
       overflow-y: auto;
     }
 
     .section {
       display: none;
-      animation: fadeIn 0.22s ease-out;
     }
 
     .section.active {
       display: block;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(4px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .section-header {
+      margin-bottom: 10px;
     }
 
     .section-title {
       font-size: 18px;
       font-weight: 600;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: #e5e7eb;
     }
 
     .section-subtitle {
       font-size: 12px;
       color: var(--muted);
-      margin-bottom: 10px;
+      margin-top: 2px;
     }
 
-    /* Cards */
+    /* GENERIC CARDS */
     .card {
-      background: radial-gradient(circle at top left, #1f2937 0, #020617 55%);
-      border-radius: var(--radius-xl);
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      padding: 14px 14px 12px;
-      margin-bottom: 12px;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 12px;
+      margin-bottom: 10px;
     }
 
     .card-header-row {
@@ -149,73 +136,145 @@
       margin-bottom: 6px;
     }
 
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 2px 10px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .chip-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: var(--accent);
-    }
-
-    .primary-text {
+    .card-title {
       font-size: 14px;
       font-weight: 600;
-      margin-bottom: 4px;
     }
 
-    .muted-text {
+    .card-sub {
       font-size: 12px;
       color: var(--muted);
     }
 
-    /* Home – timetable */
-    .timetable-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .timetable-slot {
-      padding: 8px;
-      border-radius: 12px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.25);
-    }
-
-    .timetable-slot span:first-child {
+    .badge {
       font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
       color: var(--muted);
     }
 
-    .timetable-slot span:last-child {
-      display: block;
-      font-size: 13px;
-      font-weight: 500;
+    /* HOME – NEXT CLASS / NEXT ASSESSMENT (UniSA style) */
+    .next-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .next-card {
+      display: flex;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.06);
+    }
+
+    .next-date {
+      width: 60px;
+      background: var(--unisa-blue);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 4px;
+    }
+
+    .next-date-day {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .next-date-month {
+      font-size: 11px;
+      text-transform: uppercase;
       margin-top: 2px;
     }
 
-    /* Home – banner for students image */
-    .home-banner {
-      margin-top: 12px;
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      background: #020617;
+    .next-date-label {
+      font-size: 10px;
+      opacity: 0.85;
+      margin-top: 6px;
     }
 
-    .home-banner img {
+    .next-body {
+      flex: 1;
+      padding: 8px 10px;
+      background: var(--unisa-blue-soft);
+    }
+
+    .next-heading {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--unisa-blue);
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .next-time {
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+
+    .next-location {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .next-course {
+      font-size: 11px;
+      color: #1f2933;
+    }
+
+    /* HOME – QUICK ACTIONS (no email button as requested) */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .quick-action {
+      background: #ffffff;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 10px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .quick-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: var(--unisa-blue-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      color: var(--unisa-blue);
+    }
+
+    /* HOME – BANNER */
+    .home-banner-img {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #000000;
+    }
+
+    .home-banner-img img {
       display: block;
       width: 100%;
       height: 120px;
@@ -223,27 +282,82 @@
     }
 
     .home-banner-caption {
-      padding: 8px 10px;
       font-size: 11px;
       color: var(--muted);
-      background: radial-gradient(circle at top, rgba(30, 64, 175, 0.3), #020617 70%);
+      margin-top: 4px;
     }
 
-    /* Assignments */
+    /* HOME – SUBJECT / UNIT LIST (blue + white cards like screenshot) */
+    .subject-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .subject-item {
+      display: flex;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #ffffff;
+    }
+
+    .subject-code {
+      width: 68px;
+      background: var(--unisa-blue);
+      color: #ffffff;
+      padding: 8px 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .subject-code-main {
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .subject-code-year {
+      font-size: 10px;
+      opacity: 0.9;
+    }
+
+    .subject-body {
+      flex: 1;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .subject-title {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .subject-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ASSIGNMENTS */
     .assignment-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
+      margin-top: 4px;
     }
 
     .assignment-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px;
-      border-radius: 12px;
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(148, 163, 184, 0.3);
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
     }
 
     .assignment-main {
@@ -266,31 +380,30 @@
       font-size: 11px;
       padding: 3px 8px;
       border-radius: 999px;
-      background: rgba(59, 130, 246, 0.18);
-      border: 1px solid rgba(59, 130, 246, 0.55);
-      color: #bfdbfe;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
     }
 
-    /* Profile */
+    /* PROFILE */
     .profile-header {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .profile-avatar {
-      width: 42px;
-      height: 42px;
+      width: 40px;
+      height: 40px;
       border-radius: 999px;
-      background: radial-gradient(circle at 30% 10%, #38bdf8, #1d4ed8);
+      background: var(--unisa-blue-light);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 17px;
+      color: #ffffff;
       font-weight: 600;
-      color: white;
-      box-shadow: 0 0 16px rgba(56, 189, 248, 0.7);
+      font-size: 16px;
     }
 
     .profile-name {
@@ -307,8 +420,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
     }
 
     .info-row:last-child {
@@ -326,35 +439,30 @@
     }
 
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 9px 11px;
-      border-radius: 999px;
       border: none;
       outline: none;
-      background: radial-gradient(circle at top left, #2563eb, #1d4ed8);
-      color: white;
+      background: var(--unisa-blue-light);
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 8px 12px;
       font-size: 12px;
       font-weight: 500;
       cursor: pointer;
-      box-shadow: 0 12px 25px rgba(37, 99, 235, 0.5);
     }
 
     .btn:active {
+      opacity: 0.85;
       transform: translateY(1px);
-      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
     }
 
-    /* Classes section – electronics background */
-    .classes-section {
-      position: relative;
-      border-radius: var(--radius-xl);
+    /* CLASSES – ELECTRONICS BACKGROUND */
+    .classes-wrapper {
+      border-radius: var(--radius-lg);
       overflow: hidden;
-      border: 1px solid rgba(148, 163, 184, 0.45);
-      background: #020617;
-      min-height: 200px;
+      border: 1px solid var(--border);
+      background: #000000;
+      position: relative;
+      min-height: 180px;
     }
 
     .classes-bg {
@@ -363,114 +471,111 @@
       background-image: url("electronics-bg.jpg");
       background-size: cover;
       background-position: center;
-      filter: brightness(0.35) saturate(1.2);
+      filter: brightness(0.55);
     }
 
     .classes-overlay {
       position: relative;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      color: #e5e7eb;
+      padding: 10px;
+      color: #f9fafb;
     }
 
-    .classes-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 10px;
+    .classes-label {
+      font-size: 11px;
+      padding: 3px 7px;
       border-radius: 999px;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      font-size: 11px;
-      color: #e5e7eb;
-      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.55);
+      display: inline-block;
+      margin-bottom: 6px;
     }
 
-    .classes-blurb {
+    .classes-text {
       font-size: 12px;
-      max-width: 270px;
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+      max-width: 260px;
     }
 
-    .classes-status {
-      margin-top: 6px;
-      font-size: 11px;
-      color: #e5e7eb;
-      opacity: 0.95;
-    }
-
-    /* Settings */
+    /* SETTINGS */
     .settings-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
-    .settings-item {
-      padding: 10px;
-      border-radius: 12px;
-      background: rgba(15, 23, 42, 0.96);
-      border: 1px solid rgba(148, 163, 184, 0.35);
+    .settings-item-title {
+      font-size: 12px;
+      font-weight: 600;
     }
 
-    .settings-label {
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .settings-value {
+    .settings-item-main {
       font-size: 13px;
-      font-weight: 500;
-      color: #e5e7eb;
+      margin-top: 2px;
     }
 
     .settings-note {
-      margin-top: 4px;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* CAMPUS MAP CARD (FULL PHONE SIZE AREA) */
+    .map-card {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .map-img-wrap {
+      width: 100%;
+      height: 420px;
+      max-height: calc(100vh - 170px);
+      background: #000000;
+    }
+
+    .map-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .map-caption {
+      padding: 8px 10px;
       font-size: 11px;
       color: var(--muted);
     }
 
-    /* Bottom nav */
+    /* BOTTOM NAV (UniSA style) */
     .bottom-nav {
       position: fixed;
       left: 50%;
       transform: translateX(-50%);
-      bottom: 12px;
+      bottom: 8px;
       width: 100%;
       max-width: 480px;
-      padding: 0 14px;
-      z-index: 20;
+      padding: 0 10px;
     }
 
     .bottom-nav-inner {
+      background: #ffffff;
+      border-radius: 999px;
+      border: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      background: rgba(15, 23, 42, 0.96);
-      backdrop-filter: blur(16px);
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      padding: 6px;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
+      padding: 4px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     }
 
     .nav-btn {
       flex: 1;
-      border-radius: 999px;
       border: none;
       background: transparent;
-      color: var(--muted);
-      font-size: 11px;
+      border-radius: 999px;
       padding: 6px 0;
+      font-size: 11px;
+      color: var(--muted);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
+      gap: 1px;
       cursor: pointer;
     }
 
@@ -479,24 +584,20 @@
     }
 
     .nav-btn.active {
-      background: radial-gradient(circle at top, rgba(37, 99, 235, 0.28), rgba(15, 23, 42, 0.9));
-      color: #e5e7eb;
-      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.55);
+      background: #e0efff;
+      color: var(--accent);
+      font-weight: 500;
     }
 
-    .nav-btn-label {
-      font-size: 10px;
-    }
-
-    /* ID card full-screen overlay */
+    /* ID CARD OVERLAY */
     .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.6);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 40;
+      z-index: 30;
       padding: 12px;
     }
 
@@ -505,236 +606,316 @@
     }
 
     .overlay-inner {
-      background: #020617;
+      background: #ffffff;
       border-radius: 16px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      max-width: 380px;
+      max-width: 360px;
       width: 100%;
+      border: 1px solid var(--border);
       padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
     }
 
     .overlay-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 6px;
     }
 
     .overlay-title {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
     }
 
     .overlay-close {
       border: none;
       background: transparent;
-      color: var(--muted);
-      font-size: 16px;
+      font-size: 18px;
       cursor: pointer;
+      color: var(--muted);
     }
 
     .overlay-img-wrap {
-      border-radius: 12px;
+      border-radius: 10px;
       overflow: hidden;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: #000;
+      border: 1px solid var(--border);
+      background: #000000;
     }
 
     .overlay-img-wrap img {
       display: block;
       width: 100%;
-      height: auto;
+      max-height: 70vh;
+      object-fit: contain;
     }
 
     .overlay-footer {
       font-size: 11px;
       color: var(--muted);
+      margin-top: 4px;
       text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="app-shell">
-    <!-- Top bar -->
-    <div class="topbar">
-      <div class="topbar-title">
-        <span>Student Portal</span>
-        <span>Luciano Jesse Rostiroll</span>
+  <div class="app">
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="header-title">University of South Australia</div>
+        <div class="header-sub">Luciano Jesse Rostiroll</div>
       </div>
-      <div class="topbar-tag">
-        <span class="topbar-tag-dot"></span>
+      <div class="header-tag">
+        <span class="header-tag-dot"></span>
         <span>Online</span>
       </div>
-    </div>
+    </header>
 
-    <!-- Main content -->
-    <div class="content">
+    <!-- MAIN CONTENT -->
+    <main class="content">
       <!-- HOME -->
       <section id="homeSection" class="section active">
-        <div class="section-title">
-          <span>Today</span>
-          <span class="muted-text" style="font-size:11px;">Overview</span>
+        <div class="section-header">
+          <div class="section-title">Home</div>
+          <div class="section-subtitle">Today’s overview</div>
         </div>
 
-        <!-- Timetable card -->
+        <!-- NEXT CLASS + NEXT ASSESSMENT -->
+        <div class="next-row">
+          <div class="next-card">
+            <div class="next-date">
+              <div class="next-date-day">30</div>
+              <div class="next-date-month">OCT</div>
+              <div class="next-date-label">Next<br>Class</div>
+            </div>
+            <div class="next-body">
+              <div class="next-heading">Next class</div>
+              <div class="next-time">09:00 AM – 12:00 PM ACDT</div>
+              <div class="next-location">GK1-51 MAG (W5H)</div>
+              <div class="next-course">
+                Becoming a Primary Teacher with an Arts Specialisation
+              </div>
+            </div>
+          </div>
+
+          <div class="next-card">
+            <div class="next-date">
+              <div class="next-date-day">30</div>
+              <div class="next-date-month">OCT</div>
+              <div class="next-date-label">Next<br>Assessment</div>
+            </div>
+            <div class="next-body">
+              <div class="next-heading">Next assessment</div>
+              <div class="next-time">03:00 PM ACDT</div>
+              <div class="next-location">Assessment 3 · Project</div>
+              <div class="next-course">
+                Design and Technology Education
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS (no email) -->
+        <div class="quick-actions">
+          <div class="quick-action" id="quickMapBtn">
+            <div class="quick-icon">🗺️</div>
+            <div>Campus map</div>
+          </div>
+          <div class="quick-action" id="quickIdBtn">
+            <div class="quick-icon">🎫</div>
+            <div>Student ID</div>
+          </div>
+          <div class="quick-action">
+            <div class="quick-icon">⚙️</div>
+            <div>Customise</div>
+          </div>
+        </div>
+
+        <!-- BANNER UNDER TIMETABLE -->
         <div class="card">
-          <div class="card-header-row">
-            <div>
-              <div class="primary-text">Today’s timetable</div>
-              <div class="muted-text">Quick view of your next classes</div>
-            </div>
-            <div class="chip">
-              <span class="chip-dot"></span>
-              <span>Week A</span>
-            </div>
+          <div class="home-banner-img">
+            <img src="students-banner.jpg" alt="Students banner">
           </div>
-
-          <div class="timetable-grid">
-            <div class="timetable-slot">
-              <span>08:45 – 09:45</span>
-              <span>Maths</span>
-            </div>
-            <div class="timetable-slot">
-              <span>09:50 – 10:50</span>
-              <span>Physics</span>
-            </div>
-            <div class="timetable-slot">
-              <span>11:10 – 12:10</span>
-              <span>Electronics</span>
-            </div>
-            <div class="timetable-slot">
-              <span>13:00 – 14:00</span>
-              <span>Programming</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Banner under timetable for students image -->
-        <div class="home-banner">
-          <!-- Put your students image here -->
-          <img src="students-banner.jpg" alt="Students banner" />
           <div class="home-banner-caption">
-            Banner area for student image — replace <code>students-banner.jpg</code> with your own photo.
+            Banner image – replace <code>students-banner.jpg</code> with your own
+            students / campus photo.
           </div>
         </div>
 
-        <!-- Quick status card -->
+        <!-- SUBJECT LIST LIKE SCREENSHOT -->
         <div class="card">
-          <div class="primary-text">At a glance</div>
-          <div class="muted-text" style="margin-bottom:6px;">Assignments and portal status</div>
-          <div class="assignment-list">
-            <div class="assignment-item">
-              <div class="assignment-main">
-                <span class="assignment-title">Assignments due</span>
-                <span class="assignment-meta">8 active · 2 due this week</span>
+          <div class="card-title">Your subjects</div>
+          <div class="card-sub">Sample units (static text – for look only)</div>
+
+          <div class="subject-list">
+            <div class="subject-item">
+              <div class="subject-code">
+                <div class="subject-code-main">EDUC 1081</div>
+                <div class="subject-code-year">SP2, 2020</div>
               </div>
-              <span class="assignment-pill">View all</span>
-            </div>
-            <div class="assignment-item">
-              <div class="assignment-main">
-                <span class="assignment-title">Portal status</span>
-                <span class="assignment-meta">All systems running normally</span>
+              <div class="subject-body">
+                <div class="subject-title">
+                  Professional Experience 1: Introduction to Education
+                </div>
+                <div class="subject-meta">City East · On campus</div>
               </div>
-              <span class="assignment-pill" style="background:rgba(34,197,94,0.20);border-color:rgba(34,197,94,0.7);color:#bbf7d0;">
-                OK
-              </span>
             </div>
+
+            <div class="subject-item">
+              <div class="subject-code">
+                <div class="subject-code-main">EDUC 1099</div>
+                <div class="subject-code-year">SP5, 2020</div>
+              </div>
+              <div class="subject-body">
+                <div class="subject-title">
+                  Becoming a Primary Teacher with an Arts Specialisation
+                </div>
+                <div class="subject-meta">Magill · On campus</div>
+              </div>
+            </div>
+
+            <div class="subject-item">
+              <div class="subject-code">
+                <div class="subject-code-main">EDUC 1101</div>
+                <div class="subject-code-year">SP5, 2020</div>
+              </div>
+              <div class="subject-body">
+                <div class="subject-title">Design and Technology Education</div>
+                <div class="subject-meta">City West · On campus</div>
+              </div>
+            </div>
+
+            <div class="subject-item">
+              <div class="subject-code">
+                <div class="subject-code-main">EDUC 1102</div>
+                <div class="subject-code-year">SP5, 2020</div>
+              </div>
+              <div class="subject-body">
+                <div class="subject-title">
+                  Foundations in Learning and Teaching 1
+                </div>
+                <div class="subject-meta">City West · On campus</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FULL-SIZE MAP AREA (tied to quickMapBtn) -->
+        <div class="card map-card" id="mapCard">
+          <div class="map-img-wrap">
+            <img src="campus-map.jpg" alt="Campus map">
+          </div>
+          <div class="map-caption">
+            Campus map – replace <code>campus-map.jpg</code> with your own map
+            image. Quick action “Campus map” scrolls to this card.
           </div>
         </div>
       </section>
 
-      <!-- CLASSES -->
+      <!-- CLASSES (electronics background only) -->
       <section id="classesSection" class="section">
-        <div class="section-title">
-          <span>Classes</span>
-          <span class="muted-text" style="font-size:11px;">Electronics themed</span>
+        <div class="section-header">
+          <div class="section-title">Classes</div>
+          <div class="section-subtitle">Electronics theme</div>
         </div>
 
-        <div class="classes-section">
+        <div class="classes-wrapper">
           <div class="classes-bg"></div>
           <div class="classes-overlay">
-            <div class="classes-badge">
-              <span>⚡</span>
-              <span>Electronics Focus</span>
-            </div>
-            <div class="classes-blurb">
-              Your classes area is themed with an electronics background. Use this screen to list your subjects or lab times.
-            </div>
-            <div class="classes-status">
-              No classes are listed here yet. You can just keep this as a cool background if you like.
+            <div class="classes-label">Electronics</div>
+            <div class="classes-text">
+              This screen uses an electronics image as the background. You can
+              keep it like this or later add timetable details on top.
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ASSIGNMENTS (with extra ones) -->
+      <!-- ASSIGNMENTS (8 items) -->
       <section id="assignmentsSection" class="section">
-        <div class="section-title">
-          <span>Assignments</span>
-          <span class="muted-text" style="font-size:11px;">8 active</span>
+        <div class="section-header">
+          <div class="section-title">Assignments</div>
+          <div class="section-subtitle">8 active tasks</div>
         </div>
 
         <div class="card">
-          <div class="section-subtitle">Upcoming work</div>
+          <div class="card-title">Upcoming work</div>
           <div class="assignment-list">
-            <!-- First four (original style) -->
             <div class="assignment-item">
               <div class="assignment-main">
-                <span class="assignment-title">Maths – Trigonometry Worksheet</span>
-                <span class="assignment-meta">Due: 12 Dec · Weight: 10%</span>
-              </div>
-              <span class="assignment-pill">In progress</span>
-            </div>
-            <div class="assignment-item">
-              <div class="assignment-main">
-                <span class="assignment-title">Physics – Motion Lab Report</span>
-                <span class="assignment-meta">Due: 14 Dec · Weight: 15%</span>
-              </div>
-              <span class="assignment-pill">Not started</span>
-            </div>
-            <div class="assignment-item">
-              <div class="assignment-main">
-                <span class="assignment-title">Electronics – PCB Design Task</span>
-                <span class="assignment-meta">Due: 18 Dec · Weight: 20%</span>
-              </div>
-              <span class="assignment-pill">In progress</span>
-            </div>
-            <div class="assignment-item">
-              <div class="assignment-main">
-                <span class="assignment-title">Programming – Array Practice</span>
-                <span class="assignment-meta">Due: 20 Dec · Weight: 10%</span>
+                <div class="assignment-title">
+                  Maths – Trigonometry Worksheet
+                </div>
+                <div class="assignment-meta">Due: 12 Dec · Weight: 10%</div>
               </div>
               <span class="assignment-pill">In progress</span>
             </div>
 
-            <!-- Extra four assignments you asked for -->
             <div class="assignment-item">
               <div class="assignment-main">
-                <span class="assignment-title">Maths – Exam Revision Set</span>
-                <span class="assignment-meta">Due: 22 Dec · Weight: 5%</span>
+                <div class="assignment-title">
+                  Physics – Motion Lab Report
+                </div>
+                <div class="assignment-meta">Due: 14 Dec · Weight: 15%</div>
               </div>
               <span class="assignment-pill">Not started</span>
             </div>
+
             <div class="assignment-item">
               <div class="assignment-main">
-                <span class="assignment-title">Physics – Energy Problems</span>
-                <span class="assignment-meta">Due: 23 Dec · Weight: 5%</span>
+                <div class="assignment-title">
+                  Electronics – PCB Design Task
+                </div>
+                <div class="assignment-meta">Due: 18 Dec · Weight: 20%</div>
               </div>
               <span class="assignment-pill">In progress</span>
             </div>
+
             <div class="assignment-item">
               <div class="assignment-main">
-                <span class="assignment-title">Electronics – Soldering Practice Log</span>
-                <span class="assignment-meta">Due: 26 Dec · Weight: 5%</span>
+                <div class="assignment-title">
+                  Programming – Array Practice
+                </div>
+                <div class="assignment-meta">Due: 20 Dec · Weight: 10%</div>
+              </div>
+              <span class="assignment-pill">In progress</span>
+            </div>
+
+            <div class="assignment-item">
+              <div class="assignment-main">
+                <div class="assignment-title">
+                  Maths – Exam Revision Set
+                </div>
+                <div class="assignment-meta">Due: 22 Dec · Weight: 5%</div>
               </div>
               <span class="assignment-pill">Not started</span>
             </div>
+
             <div class="assignment-item">
               <div class="assignment-main">
-                <span class="assignment-title">Programming – Mini Project</span>
-                <span class="assignment-meta">Due: 30 Dec · Weight: 15%</span>
+                <div class="assignment-title">
+                  Physics – Energy Problems
+                </div>
+                <div class="assignment-meta">Due: 23 Dec · Weight: 5%</div>
+              </div>
+              <span class="assignment-pill">In progress</span>
+            </div>
+
+            <div class="assignment-item">
+              <div class="assignment-main">
+                <div class="assignment-title">
+                  Electronics – Soldering Practice Log
+                </div>
+                <div class="assignment-meta">Due: 26 Dec · Weight: 5%</div>
+              </div>
+              <span class="assignment-pill">Not started</span>
+            </div>
+
+            <div class="assignment-item">
+              <div class="assignment-main">
+                <div class="assignment-title">
+                  Programming – Mini Project
+                </div>
+                <div class="assignment-meta">Due: 30 Dec · Weight: 15%</div>
               </div>
               <span class="assignment-pill">In progress</span>
             </div>
@@ -742,11 +923,11 @@
         </div>
       </section>
 
-      <!-- PROFILE (only email + phone in contact section, ID card button) -->
+      <!-- PROFILE (only email + phone, ID card button) -->
       <section id="profileSection" class="section">
-        <div class="section-title">
-          <span>Profile</span>
-          <span class="muted-text" style="font-size:11px;">ID & contact</span>
+        <div class="section-header">
+          <div class="section-title">Profile</div>
+          <div class="section-subtitle">ID &amp; contact</div>
         </div>
 
         <div class="card">
@@ -754,18 +935,16 @@
             <div class="profile-avatar">LJ</div>
             <div>
               <div class="profile-name">Luciano Jesse Rostiroll</div>
-              <div class="profile-id">Student ID • 123 456 789</div>
+              <div class="profile-id">Student ID · 123 456 789</div>
             </div>
           </div>
           <button class="btn" id="openIdCardBtn">
-            <span>🎫</span>
-            <span>Show ID Card</span>
+            🎫 Show ID card
           </button>
         </div>
 
         <div class="card">
-          <div class="section-subtitle">Contact details</div>
-          <!-- ONLY email + phone as requested -->
+          <div class="card-title">Contact details</div>
           <div class="info-row">
             <div class="info-label">Email</div>
             <div class="info-value">luciano@example.com</div>
@@ -777,87 +956,87 @@
         </div>
       </section>
 
-      <!-- SETTINGS (help desk support fixed, not editable) -->
+      <!-- SETTINGS (help desk fixed text) -->
       <section id="settingsSection" class="section">
-        <div class="section-title">
-          <span>Settings</span>
-          <span class="muted-text" style="font-size:11px;">Support</span>
+        <div class="section-header">
+          <div class="section-title">Settings</div>
+          <div class="section-subtitle">Support &amp; info</div>
         </div>
 
         <div class="card">
-          <div class="section-subtitle">Support & help desk</div>
           <div class="settings-list">
-            <div class="settings-item">
-              <div class="settings-label">Help desk support</div>
-              <div class="settings-value">G’Day Parks – using their terms & conditions</div>
+            <div>
+              <div class="settings-item-title">Help desk support</div>
+              <div class="settings-item-main">
+                G’Day Parks – using their terms &amp; conditions.
+              </div>
               <div class="settings-note">
-                This text is fixed and not editable in the app. Contact the help desk directly if you need changes.
+                This text is fixed and not editable inside the app.
               </div>
             </div>
 
-            <div class="settings-item">
-              <div class="settings-label">Support email</div>
-              <div class="settings-value">support@example.com</div>
+            <div>
+              <div class="settings-item-title">Support email</div>
+              <div class="settings-item-main">support@example.com</div>
               <div class="settings-note">
-                For booking issues, refunds, or portal problems.
+                Use this for booking issues or portal problems.
               </div>
             </div>
 
-            <div class="settings-item">
-              <div class="settings-label">Support phone</div>
-              <div class="settings-value">1300 000 000</div>
+            <div>
+              <div class="settings-item-title">Support phone</div>
+              <div class="settings-item-main">1300 000 000</div>
             </div>
           </div>
         </div>
       </section>
-    </div>
+    </main>
 
-    <!-- Bottom nav -->
-    <div class="bottom-nav">
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
       <div class="bottom-nav-inner">
         <button class="nav-btn active" data-target="homeSection">
           <span class="icon">🏠</span>
-          <span class="nav-btn-label">Home</span>
+          <span>Home</span>
         </button>
         <button class="nav-btn" data-target="classesSection">
           <span class="icon">📚</span>
-          <span class="nav-btn-label">Classes</span>
+          <span>Classes</span>
         </button>
         <button class="nav-btn" data-target="assignmentsSection">
           <span class="icon">✅</span>
-          <span class="nav-btn-label">Assignments</span>
+          <span>Assignments</span>
         </button>
         <button class="nav-btn" data-target="profileSection">
           <span class="icon">👤</span>
-          <span class="nav-btn-label">Profile</span>
+          <span>Profile</span>
         </button>
         <button class="nav-btn" data-target="settingsSection">
           <span class="icon">⚙️</span>
-          <span class="nav-btn-label">Settings</span>
+          <span>Settings</span>
         </button>
       </div>
-    </div>
+    </nav>
   </div>
 
-  <!-- ID card overlay -->
+  <!-- ID CARD OVERLAY -->
   <div id="idCardOverlay" class="overlay">
     <div class="overlay-inner">
       <div class="overlay-header">
         <div class="overlay-title">Student ID Card</div>
-        <button class="overlay-close" id="closeIdCardBtn">&times;</button>
+        <button id="closeIdCardBtn" class="overlay-close">&times;</button>
       </div>
       <div class="overlay-img-wrap">
-        <!-- Your full-screen ID card image -->
-        <img src="id-card.png" alt="ID Card for Luciano Jesse Rostiroll" />
+        <img src="id-card.png" alt="ID Card – Luciano Jesse Rostiroll">
       </div>
       <div class="overlay-footer">
-        Tap anywhere outside this card or press × to close.
+        Tap outside the card or press × to close.
       </div>
     </div>
   </div>
 
   <script>
-    // Tab switching
+    // NAVIGATION
     const navButtons = document.querySelectorAll(".nav-btn");
     const sections = document.querySelectorAll(".section");
 
@@ -865,11 +1044,9 @@
       btn.addEventListener("click", () => {
         const targetId = btn.getAttribute("data-target");
 
-        // Toggle active nav button
         navButtons.forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
 
-        // Toggle active section
         sections.forEach((sec) => {
           if (sec.id === targetId) {
             sec.classList.add("active");
@@ -880,7 +1057,7 @@
       });
     });
 
-    // ID card overlay logic
+    // ID CARD OVERLAY
     const idCardOverlay = document.getElementById("idCardOverlay");
     const openIdCardBtn = document.getElementById("openIdCardBtn");
     const closeIdCardBtn = document.getElementById("closeIdCardBtn");
@@ -894,10 +1071,23 @@
     });
 
     idCardOverlay.addEventListener("click", (e) => {
-      // Close when clicking outside inner card
       if (e.target === idCardOverlay) {
         idCardOverlay.classList.remove("active");
       }
+    });
+
+    // QUICK ACTION – STUDENT ID
+    const quickIdBtn = document.getElementById("quickIdBtn");
+    quickIdBtn.addEventListener("click", () => {
+      idCardOverlay.classList.add("active");
+    });
+
+    // QUICK ACTION – CAMPUS MAP (scroll to map card)
+    const quickMapBtn = document.getElementById("quickMapBtn");
+    const mapCard = document.getElementById("mapCard");
+
+    quickMapBtn.addEventListener("click", () => {
+      mapCard.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   </script>
 </body>
