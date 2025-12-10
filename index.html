@@ -80,6 +80,9 @@
       color:#fff;
       padding:6px;
       cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
 
     /* LAYOUT */
@@ -259,9 +262,6 @@
       font-size:13px;
     }
     .profile-label{font-weight:600;font-size:12px;color:var(--muted);}
-    .profile-row-clickable{
-      cursor:pointer;
-    }
 
     /* ID CARD PREVIEW (on profile tab) */
     .id-preview-wrapper{
@@ -270,14 +270,19 @@
       flex-direction:column;
       align-items:center;
       gap:4px;
+      cursor:pointer;
     }
     .id-preview-image{
       width:100%;
-      max-width:260px;        /* nice size on phone */
+      max-width:260px;
       border-radius:16px;
       box-shadow:0 10px 26px rgba(15,23,42,.4);
-      cursor:pointer;
       object-fit:contain;
+      transition:transform .15s ease, box-shadow .15s ease;
+    }
+    .id-preview-wrapper:active .id-preview-image{
+      transform:scale(0.97);
+      box-shadow:0 6px 18px rgba(15,23,42,.35);
     }
 
     /* ID IMAGE FULLSCREEN */
@@ -286,13 +291,13 @@
       text-align:center;
     }
     .id-fullscreen-image{
-      max-height:calc(100vh - 80px); /* leave room for title + close button */
+      max-height:calc(100vh - 80px);
       width:auto;
       max-width:100%;
       display:block;
       margin:0 auto;
       border-radius:0;
-      object-fit:contain;      /* keep aspect ratio; good for vertical image */
+      object-fit:contain;
     }
 
     /* MODAL */
@@ -313,6 +318,9 @@
       box-shadow:0 20px 40px rgba(15,23,42,.55);
       max-height:90vh;
       overflow:auto;
+      transform:translateY(0);
+      opacity:1;
+      transition:transform .2s ease, opacity .2s ease;
     }
     .modal-head{
       display:flex;
@@ -322,6 +330,7 @@
     }
     .modal-head h3{font-size:16px;}
     .modal-body{font-size:13px;color:#111827;}
+
     .btn-link{
       border:0;
       background:#eef2ff;
@@ -331,7 +340,16 @@
       cursor:pointer;
     }
 
-    /* FULLSCREEN MODAL for ID card */
+    /* FULLSCREEN MODAL for ID card + animation */
+    @keyframes modalSlideUp{
+      from{transform:translateY(40px);opacity:0;}
+      to{transform:translateY(0);opacity:1;}
+    }
+    @keyframes modalSlideDown{
+      from{transform:translateY(0);opacity:1;}
+      to{transform:translateY(40px);opacity:0;}
+    }
+
     .modal-fullscreen{
       width:100vw;
       height:100vh;
@@ -340,12 +358,16 @@
       display:flex;
       flex-direction:column;
       padding:14px 14px 20px;
+      animation:modalSlideUp .25s ease-out;
     }
     .modal-fullscreen .modal-body{
       flex:1;
       display:flex;
       align-items:center;
       justify-content:center;
+    }
+    .modal-fullscreen.modal-closing{
+      animation:modalSlideDown .22s ease-in forwards;
     }
 
     /* BOTTOM NAV */
@@ -388,7 +410,6 @@
 
 <header class="topbar" role="banner">
   <div class="logo">
-    <!-- Uses your emblem -->
     <img src="icons/icon-192.png" alt="Portal logo">
   </div>
   <div class="header-text">
@@ -396,11 +417,12 @@
     <div class="header-sub">Welcome, <span id="welcomeName">Student</span></div>
   </div>
   <div class="header-actions">
-    <button aria-label="Search">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/>
-        <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- SETTINGS ICON (replaces search) -->
+    <button aria-label="Settings" onclick="openSettings()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M4.5 13.5v-3l1.7-.6a1 1 0 0 0 .6-.6l.5-1.6 2.8-1 1.2 1a1 1 0 0 0 .7.3h1.8a1 1 0 0 0 .7-.3l1.2-1 2.8 1 .5 1.6a1 1 0 0 0 .6.6l1.7.6v3l-1.7.6a1 1 0 0 0-.6.6l-.5 1.6-2.8 1-1.2-1a1 1 0 0 0-.7-.3h-1.8a1 1 0 0 0-.7.3l-1.2 1-2.8-1-.5-1.6a1 1 0 0 0-.6-.6l-1.7-.6Z"
+              stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
   </div>
@@ -582,7 +604,6 @@
 
       <!-- ID CARD PREVIEW VISIBLE ON PROFILE TAB -->
       <div class="id-preview-wrapper" onclick="openIdCard()">
-        <!-- change id-card.png if your file has a different name/path -->
         <img src="id-card.png" alt="Student ID card" class="id-preview-image">
         <div class="small muted">Tap to view full screen</div>
       </div>
@@ -604,11 +625,14 @@
           <div class="profile-label">Phone Number</div>
           <div id="profilePhone">0415-601-071</div>
         </div>
+        <div class="profile-row">
+          <div class="profile-label">Help desk</div>
+          <div id="profileHelpdesk">Not set</div>
+        </div>
       </div>
 
       <div style="margin-top:12px;text-align:left;display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn-link" onclick="editProfile()">Edit profile</button>
-        <button class="btn-link" onclick="openIdCard()">View ID card</button>
       </div>
     </div>
   </section>
@@ -668,7 +692,8 @@
     degree:"Bachelor of Education",
     id:"123456",
     email:"john@example.com",
-    phone:"0415-601-071"
+    phone:"0415-601-071",
+    helpdesk:"Not set"
   };
   const demoAssignments = [
     {id:"a1",unit:"EDUC 101",title:"Professional Experience Reflection",due:"2025-11-15",status:"submitted",grade:88,notes:"Submitted via portal"},
@@ -704,6 +729,7 @@
     document.getElementById("profileID").innerText=p.id;
     document.getElementById("profileEmail").innerText=p.email;
     document.getElementById("profilePhone").innerText=p.phone || "—";
+    document.getElementById("profileHelpdesk").innerText=p.helpdesk || "Not set";
     const first=p.name.split(" ")[0]||"Student";
     document.getElementById("welcomeName").innerText=first;
     const initials=(p.name.split(" ").map(s=>s[0]).join("").slice(0,2)||"SP").toUpperCase();
@@ -717,8 +743,6 @@
       <label>Age<br><input id="pf_age" class="input" type="number" value="${p.age}"></label><br>
       <label>Degree<br><input id="pf_deg" class="input" value="${escapeHtml(p.degree)}"></label><br>
       <label>Student ID<br><input id="pf_id" class="input" value="${escapeHtml(p.id)}"></label><br>
-      <label>Email<br><input id="pf_email" class="input" value="${escapeHtml(p.email)}"></label><br>
-      <label>Phone<br><input id="pf_phone" class="input" value="${escapeHtml(p.phone || "")}"></label><br>
       <button class="btn-link" onclick="saveProfile()">Save</button>
     `;
     openModal("Edit profile",body);
@@ -730,18 +754,43 @@
     p.age=Number(document.getElementById("pf_age").value)||p.age;
     p.degree=document.getElementById("pf_deg").value||p.degree;
     p.id=document.getElementById("pf_id").value||p.id;
-    p.email=document.getElementById("pf_email").value||p.email;
-    p.phone=document.getElementById("pf_phone").value||p.phone;
     persist();
     renderProfile();
     closeModal();
   }
 
-  /* FULLSCREEN ID CARD IMAGE */
+  /* SETTINGS (phone, email, help desk) */
+  function openSettings(){
+    const p=state.profile;
+    const body = `
+      <label>Email<br>
+        <input id="set_email" class="input" value="${escapeHtml(p.email || "")}">
+      </label><br>
+      <label>Phone number<br>
+        <input id="set_phone" class="input" value="${escapeHtml(p.phone || "")}">
+      </label><br>
+      <label>Help desk support<br>
+        <textarea id="set_helpdesk" class="input" rows="3" placeholder="e.g. 08 1234 5678 · support@example.com">${escapeHtml(p.helpdesk || "")}</textarea>
+      </label><br>
+      <button class="btn-link" onclick="saveSettings()">Save</button>
+    `;
+    openModal("Settings", body);
+  }
+
+  function saveSettings(){
+    const p=state.profile;
+    p.email = document.getElementById("set_email").value || p.email;
+    p.phone = document.getElementById("set_phone").value || p.phone;
+    p.helpdesk = document.getElementById("set_helpdesk").value || "Not set";
+    persist();
+    renderProfile();
+    closeModal();
+  }
+
+  /* FULLSCREEN ID CARD IMAGE (animated, swipe down to close) */
   function openIdCard(){
     const body = `
       <div class="id-fullscreen-wrapper">
-        <!-- Change id-card.png if needed -->
         <img src="id-card.png" alt="Student ID card" class="id-fullscreen-image">
       </div>
     `;
@@ -887,27 +936,45 @@
     URL.revokeObjectURL(url);
   }
 
-  /* MODAL + HELPERS */
+  /* MODAL + HELPERS (with animated fullscreen + swipe-down close) */
   function openModal(title,html,options={}){
-    document.getElementById("modalTitle").innerText=title;
-    document.getElementById("modalBody").innerHTML=html;
     const backdrop=document.getElementById("modal");
     const dialog=backdrop.querySelector(".modal");
+    document.getElementById("modalTitle").innerText=title;
+    document.getElementById("modalBody").innerHTML=html;
+
+    dialog.classList.remove("modal-fullscreen","modal-closing");
+    dialog.style.transform="";
+    dialog.style.opacity="";
+
     if(options.fullscreen){
       dialog.classList.add("modal-fullscreen");
-    } else {
-      dialog.classList.remove("modal-fullscreen");
     }
+
     backdrop.style.display="flex";
     backdrop.setAttribute("aria-hidden","false");
   }
+
   function closeModal(){
     const backdrop=document.getElementById("modal");
     const dialog=backdrop.querySelector(".modal");
-    dialog.classList.remove("modal-fullscreen");
-    backdrop.style.display="none";
-    backdrop.setAttribute("aria-hidden","true");
+
+    if(dialog.classList.contains("modal-fullscreen")){
+      dialog.classList.add("modal-closing");
+      dialog.addEventListener("animationend", function handler(){
+        dialog.classList.remove("modal-closing","modal-fullscreen");
+        dialog.style.transform="";
+        dialog.style.opacity="";
+        backdrop.style.display="none";
+        backdrop.setAttribute("aria-hidden","true");
+        dialog.removeEventListener("animationend", handler);
+      });
+    } else {
+      backdrop.style.display="none";
+      backdrop.setAttribute("aria-hidden","true");
+    }
   }
+
   function escapeHtml(s){
     if(!s) return "";
     return String(s).replace(/[&<>\"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
@@ -915,12 +982,67 @@
   function persist(){localStorage.setItem("sp_state",JSON.stringify(state));}
   function openFeature(name){alert("Open feature: "+name);}
 
+  /* SWIPE DOWN TO CLOSE (fullscreen modals) */
+  let touchStartY = null;
+  let touchCurrentY = null;
+  let isDraggingModal = false;
+
+  function isModalFullscreen(){
+    const dialog=document.querySelector("#modal .modal");
+    return dialog && dialog.classList.contains("modal-fullscreen");
+  }
+
+  function onModalTouchStart(e){
+    if(!isModalFullscreen()) return;
+    if(e.touches.length !== 1) return;
+    touchStartY = e.touches[0].clientY;
+    touchCurrentY = touchStartY;
+    isDraggingModal = true;
+  }
+
+  function onModalTouchMove(e){
+    if(!isDraggingModal || !isModalFullscreen()) return;
+    touchCurrentY = e.touches[0].clientY;
+    const diff = touchCurrentY - touchStartY;
+    const dialog=document.querySelector("#modal .modal");
+    if(diff > 0 && dialog){
+      dialog.style.transform = `translateY(${diff}px)`;
+      dialog.style.opacity = String(Math.max(0.4, 1 - diff/300));
+    }
+  }
+
+  function onModalTouchEnd(){
+    if(!isDraggingModal || !isModalFullscreen()) return;
+    const diff = touchCurrentY - touchStartY;
+    const dialog=document.querySelector("#modal .modal");
+
+    isDraggingModal = false;
+    touchStartY = null;
+    touchCurrentY = null;
+
+    if(!dialog) return;
+
+    // reset transform before deciding
+    dialog.style.transform = "";
+    dialog.style.opacity = "";
+
+    if(diff > 80){
+      closeModal();
+    }
+  }
+
   // init
   renderProfile();
   renderAssignments();
-  document.getElementById("modal").addEventListener("click",e=>{
-    if(e.target===document.getElementById("modal")) closeModal();
+
+  const modalBackdrop=document.getElementById("modal");
+  modalBackdrop.addEventListener("click",e=>{
+    if(e.target===modalBackdrop) closeModal();
   });
+  modalBackdrop.addEventListener("touchstart", onModalTouchStart, {passive:true});
+  modalBackdrop.addEventListener("touchmove", onModalTouchMove, {passive:true});
+  modalBackdrop.addEventListener("touchend", onModalTouchEnd, {passive:true});
+
   document.addEventListener("keydown",e=>{if(e.key==="Escape") closeModal();});
 
   // service worker (optional; only if you create sw.js)
