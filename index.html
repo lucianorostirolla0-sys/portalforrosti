@@ -263,122 +263,16 @@
       cursor:pointer;
     }
 
-    /* ID CARD (fullscreen view) */
-    .id-card-full{
+    /* ID IMAGE in modal */
+    .id-image-wrapper{
       width:100%;
-      max-width:340px;
-      margin:0 auto;
-      border-radius:20px;
-      padding:16px 18px 18px;
-      background:linear-gradient(135deg,#1159c4,#1e3a8a);
-      color:#fff;
-      box-shadow:0 20px 50px rgba(15,23,42,.7);
-      position:relative;
-      overflow:hidden;
+      text-align:center;
     }
-    .id-card-full::before{
-      content:"";
-      position:absolute;
-      width:220px;
-      height:220px;
-      border-radius:50%;
-      background:rgba(255,255,255,0.07);
-      top:-60px;
-      right:-40px;
-    }
-    .id-card-header{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin-bottom:14px;
-      position:relative;
-      z-index:1;
-    }
-    .id-card-logo{
-      width:40px;
-      height:40px;
-      border-radius:12px;
-      background:rgba(255,255,255,0.9);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-    }
-    .id-card-logo img{
-      width:80%;
-      height:80%;
-      object-fit:contain;
-    }
-    .id-card-header-text{
-      display:flex;
-      flex-direction:column;
-    }
-    .id-card-title{
-      font-size:14px;
-      font-weight:700;
-      letter-spacing:0.06em;
-      text-transform:uppercase;
-    }
-    .id-card-subtitle{
-      font-size:11px;
-      opacity:0.9;
-    }
-    .id-card-body{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      position:relative;
-      z-index:1;
-    }
-    .id-card-avatar{
-      width:70px;
-      height:70px;
-      border-radius:22px;
-      background:rgba(15,23,42,0.85);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:800;
-      font-size:26px;
-    }
-    .id-card-info{
-      flex:1;
-      font-size:12px;
-    }
-    .id-card-name{
-      font-size:16px;
-      font-weight:800;
-      margin-bottom:2px;
-    }
-    .id-card-degree{
-      font-size:12px;
-      opacity:0.9;
-      margin-bottom:6px;
-    }
-    .id-card-row{
-      display:flex;
-      justify-content:space-between;
-      gap:8px;
-      font-size:11px;
-      opacity:0.95;
-    }
-    .id-card-row span:first-child{
-      text-transform:uppercase;
-      letter-spacing:0.08em;
-      font-weight:600;
-      opacity:0.8;
-    }
-    .id-card-footer{
-      margin-top:14px;
-      border-top:1px solid rgba(255,255,255,0.14);
-      padding-top:8px;
-      font-size:10px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      position:relative;
-      z-index:1;
-      opacity:0.9;
+    .id-image{
+      max-width:100%;
+      height:auto;
+      border-radius:16px;
+      box-shadow:0 18px 40px rgba(15,23,42,.5);
     }
 
     /* MODAL */
@@ -667,7 +561,7 @@
       <div class="profile-degree" id="profileDegree">Bachelor of Education</div>
 
       <div class="profile-info">
-        <!-- NEW: student ID row (tap to open fullscreen card) -->
+        <!-- Student ID row (tap to open fullscreen ID image) -->
         <div class="profile-row profile-row-clickable" onclick="openIdCard()">
           <div class="profile-label">Student ID</div>
           <div id="profileID">123456</div>
@@ -688,7 +582,6 @@
 
       <div style="margin-top:12px;text-align:left;display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn-link" onclick="editProfile()">Edit profile</button>
-        <!-- NEW: extra button to view the ID card -->
         <button class="btn-link" onclick="openIdCard()">View ID card</button>
       </div>
     </div>
@@ -818,34 +711,12 @@
     closeModal();
   }
 
-  /* FULLSCREEN ID CARD */
+  /* FULLSCREEN ID CARD IMAGE */
   function openIdCard(){
-    const p = state.profile;
-    const initials = (p.name.split(" ").map(s=>s[0]).join("").slice(0,2) || "SP").toUpperCase();
     const body = `
-      <div class="id-card-full">
-        <div class="id-card-header">
-          <div class="id-card-logo">
-            <img src="icons/icon-192.png" alt="Portal logo">
-          </div>
-          <div class="id-card-header-text">
-            <div class="id-card-title">Student ID</div>
-            <div class="id-card-subtitle">Student Portal</div>
-          </div>
-        </div>
-        <div class="id-card-body">
-          <div class="id-card-avatar">${initials}</div>
-          <div class="id-card-info">
-            <div class="id-card-name">${escapeHtml(p.name)}</div>
-            <div class="id-card-degree">${escapeHtml(p.degree)}</div>
-            <div class="id-card-row"><span>ID</span><span>${escapeHtml(p.id)}</span></div>
-            <div class="id-card-row"><span>Email</span><span>${escapeHtml(p.email)}</span></div>
-          </div>
-        </div>
-        <div class="id-card-footer">
-          <span>${location.hostname || "student-portal"}</span>
-          <span>ID valid · ${new Date().getFullYear()}</span>
-        </div>
+      <div class="id-image-wrapper">
+        <!-- Change "id-card.png" if your file has a different name/path -->
+        <img src="id-card.png" alt="Student ID card" class="id-image">
       </div>
     `;
     openModal("Student ID card", body, { fullscreen: true });
