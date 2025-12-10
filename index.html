@@ -118,7 +118,7 @@
     .muted{color:var(--muted);}
     .small{font-size:13px;}
 
-    /* HOME – quick actions & timetable snapshot */
+    /* HOME */
     .home-top{
       display:flex;
       justify-content:space-between;
@@ -154,45 +154,13 @@
     }
     .quick-label{font-size:12px;margin-top:4px;}
 
+    /* TIMETABLE SECTION ON HOME (now empty) */
     .snap-header{
       display:flex;
       justify-content:space-between;
       align-items:center;
       margin-bottom:10px;
     }
-    .snap-grid{
-      display:flex;
-      gap:8px;
-      overflow-x:auto;
-      padding-bottom:4px;
-    }
-    .snap-card{
-      min-width:90px;
-      border-radius:12px;
-      background:#f6f8ff;
-      padding:8px;
-      cursor:pointer;
-    }
-    .snap-day{font-weight:700;color:var(--brand);font-size:13px;}
-    .snap-time{font-size:13px;margin-top:2px;}
-    .snap-sub{font-size:12px;color:var(--muted);margin-top:2px;}
-
-    /* TIMETABLE */
-    .day-card{margin-bottom:12px;}
-    .day-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:8px;
-    }
-    .slot{
-      background:#f9fbff;
-      border-radius:12px;
-      padding:10px;
-      margin-top:6px;
-    }
-    .slot-title{font-weight:700;font-size:14px;}
-    .slot-meta{font-size:13px;color:var(--muted);margin-top:2px;}
 
     /* ASSIGNMENTS */
     .assign-controls{
@@ -288,34 +256,40 @@
     /* ID IMAGE FULLSCREEN */
     .id-fullscreen-wrapper{
       width:100%;
-      text-align:center;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
     .id-fullscreen-image{
-      max-height:calc(100vh - 80px);
+      height:70vh;            /* tall on phone */
       width:auto;
-      max-width:100%;
+      max-width:none;
       display:block;
       margin:0 auto;
-      border-radius:0;
+      border-radius:20px;
       object-fit:contain;
+      transform:rotate(90deg); /* make it vertical */
+      box-shadow:0 18px 40px rgba(15,23,42,.4);
     }
 
     /* MODAL */
     .modal-backdrop{
       position:fixed;
       inset:0;
-      background:rgba(15,23,42,.45);
+      background:rgba(255,255,255,0.0); /* transparent */
+      backdrop-filter:blur(18px) saturate(120%);
       display:none;
       align-items:center;
       justify-content:center;
       z-index:40;
     }
     .modal{
-      background:#fff;
+      background:rgba(255,255,255,0.98);
       width:min(420px,94vw);
       border-radius:16px;
       padding:14px 14px 16px;
-      box-shadow:0 20px 40px rgba(15,23,42,.55);
+      box-shadow:0 20px 40px rgba(15,23,42,.45);
       max-height:90vh;
       overflow:auto;
       transform:translateY(0);
@@ -341,13 +315,13 @@
     }
 
     /* FULLSCREEN MODAL for ID card + animation */
-    @keyframes modalSlideUp{
+    @keyframes modalEnter{
       from{transform:translateY(40px);opacity:0;}
       to{transform:translateY(0);opacity:1;}
     }
-    @keyframes modalSlideDown{
+    @keyframes modalExitUp{
       from{transform:translateY(0);opacity:1;}
-      to{transform:translateY(40px);opacity:0;}
+      to{transform:translateY(-40px);opacity:0;}
     }
 
     .modal-fullscreen{
@@ -358,7 +332,7 @@
       display:flex;
       flex-direction:column;
       padding:14px 14px 20px;
-      animation:modalSlideUp .25s ease-out;
+      animation:modalEnter .25s ease-out;
     }
     .modal-fullscreen .modal-body{
       flex:1;
@@ -367,7 +341,7 @@
       justify-content:center;
     }
     .modal-fullscreen.modal-closing{
-      animation:modalSlideDown .22s ease-in forwards;
+      animation:modalExitUp .22s ease-in forwards;
     }
 
     /* BOTTOM NAV */
@@ -417,7 +391,7 @@
     <div class="header-sub">Welcome, <span id="welcomeName">Student</span></div>
   </div>
   <div class="header-actions">
-    <!-- SETTINGS ICON (replaces search) -->
+    <!-- SETTINGS ICON -->
     <button aria-label="Settings" onclick="openSettings()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" stroke="currentColor" stroke-width="1.8"/>
@@ -434,11 +408,10 @@
     <div class="card">
       <div class="home-top">
         <div class="home-top-main">
-          <div class="small muted">Next class</div>
-          <div class="home-top-title">EDUC 101 — Professional Experience</div>
-          <div class="home-top-sub">Today · 9:00 – 12:00 · Building A</div>
+          <div class="small muted">Today</div>
+          <div class="home-top-title">No upcoming classes</div>
+          <div class="home-top-sub">You don't have any classes scheduled today.</div>
         </div>
-        <div><span class="pill">On campus</span></div>
       </div>
     </div>
 
@@ -479,82 +452,30 @@
     <div class="card">
       <div class="snap-header">
         <div>
-          <div class="small muted">Upcoming week</div>
-          <div class="home-top-title">Timetable snapshot</div>
-        </div>
-        <div class="small muted">Tap to open</div>
-      </div>
-      <div class="snap-grid">
-        <div class="snap-card" onclick="switchTo('timetable')">
-          <div class="snap-day">Mon</div>
-          <div class="snap-time">9:00</div>
-          <div class="snap-sub">EDUC 101</div>
-        </div>
-        <div class="snap-card" onclick="switchTo('timetable')">
-          <div class="snap-day">Tue</div>
-          <div class="snap-time">10:00</div>
-          <div class="snap-sub">EDUC 202</div>
-        </div>
-        <div class="snap-card" onclick="switchTo('timetable')">
-          <div class="snap-day">Thu</div>
-          <div class="snap-time">14:00</div>
-          <div class="snap-sub">EDUC 301</div>
+          <div class="small muted">Timetable</div>
+          <div class="home-top-title">No classes this week</div>
         </div>
       </div>
+      <div class="small muted">When you add subjects, they'll appear here.</div>
     </div>
   </section>
 
-  <!-- TIMETABLE -->
+  <!-- TIMETABLE (empty state) -->
   <section id="timetablePage" class="page">
     <div class="card">
-      <div class="day-head">
+      <div class="home-top">
         <div>
-          <div class="small muted">This week</div>
-          <div class="home-top-title">My timetable</div>
-        </div>
-        <div class="small muted">Local time</div>
-      </div>
-
-      <div class="day-card">
-        <div class="day-head">
-          <div class="home-top-title">Monday</div>
-          <div class="small muted">2 sessions</div>
-        </div>
-        <div class="slot">
-          <div class="slot-title">EDUC 101</div>
-          <div class="slot-meta">9:00 – 12:00 · Building A · Room 21</div>
-        </div>
-        <div class="slot">
-          <div class="slot-title">Study Group</div>
-          <div class="slot-meta">13:00 – 15:00 · Library Hub</div>
+          <div class="small muted">My timetable</div>
+          <div class="home-top-title">No classes</div>
         </div>
       </div>
-
-      <div class="day-card">
-        <div class="day-head">
-          <div class="home-top-title">Tuesday</div>
-          <div class="small muted">1 session</div>
-        </div>
-        <div class="slot">
-          <div class="slot-title">EDUC 202</div>
-          <div class="slot-meta">10:00 – 12:00 · Studio 3</div>
-        </div>
-      </div>
-
-      <div class="day-card">
-        <div class="day-head">
-          <div class="home-top-title">Thursday</div>
-          <div class="small muted">1 session</div>
-        </div>
-        <div class="slot">
-          <div class="slot-title">EDUC 301</div>
-          <div class="slot-meta">14:00 – 16:00 · Tech Workshop</div>
-        </div>
+      <div style="margin-top:8px" class="small muted">
+        You currently don't have any classes in your timetable.
       </div>
     </div>
   </section>
 
-  <!-- ASSIGNMENTS -->
+  <!-- ASSIGNMENTS (Electrical Engineering) -->
   <section id="assignmentsPage" class="page">
     <div class="card">
       <div class="home-top">
@@ -598,11 +519,11 @@
   <!-- PROFILE -->
   <section id="profilePage" class="page">
     <div class="card profile-card">
-      <div class="avatar"><span id="avatarInitials">JD</span></div>
-      <div class="profile-name" id="profileName">John Doe</div>
-      <div class="profile-degree" id="profileDegree">Bachelor of Education</div>
+      <div class="avatar"><span id="avatarInitials">LJ</span></div>
+      <div class="profile-name" id="profileName">Luciano Jesse Rostirolla</div>
+      <div class="profile-degree" id="profileDegree">Bachelor of Electrical Engineering</div>
 
-      <!-- ID CARD PREVIEW VISIBLE ON PROFILE TAB -->
+      <!-- ID CARD PREVIEW -->
       <div class="id-preview-wrapper" onclick="openIdCard()">
         <img src="id-card.png" alt="Student ID card" class="id-preview-image">
         <div class="small muted">Tap to view full screen</div>
@@ -611,23 +532,11 @@
       <div class="profile-info">
         <div class="profile-row">
           <div class="profile-label">Student ID</div>
-          <div id="profileID">123456</div>
+          <div id="profileID">739148265</div>
         </div>
         <div class="profile-row">
-          <div class="profile-label">Age</div>
-          <div id="profileAge">19</div>
-        </div>
-        <div class="profile-row">
-          <div class="profile-label">Email</div>
-          <div id="profileEmail">lucianorostirolla0@gmail.com</div>
-        </div>
-        <div class="profile-row">
-          <div class="profile-label">Phone Number</div>
-          <div id="profilePhone">0415-601-071</div>
-        </div>
-        <div class="profile-row">
-          <div class="profile-label">Help desk</div>
-          <div id="profileHelpdesk">Not set</div>
+          <div class="profile-label">Date of birth</div>
+          <div id="profileDOB">2/11/2006</div>
         </div>
       </div>
 
@@ -687,19 +596,63 @@
 <script>
   /* STATE */
   const defaultProfile = {
-    name:"John Doe",
-    age:21,
-    degree:"Bachelor of Education",
-    id:"123456",
+    name:"Luciano Jesse Rostirolla",
+    degree:"Bachelor of Electrical Engineering",
+    id:"739148265",
+    dob:"2/11/2006",
     email:"john@example.com",
-    phone:"0415-601-071",
+    phone:"—",
     helpdesk:"Not set"
   };
+
   const demoAssignments = [
-    {id:"a1",unit:"EDUC 101",title:"Professional Experience Reflection",due:"2025-11-15",status:"submitted",grade:88,notes:"Submitted via portal"},
-    {id:"a2",unit:"EDUC 202",title:"Design Teaching Plan",due:"2025-11-25",status:"pending",grade:null,notes:""},
-    {id:"a3",unit:"EDUC 301",title:"Tech Workshop Report",due:"2025-10-28",status:"overdue",grade:72,notes:"Late submission"},
+    {
+      id:"a1",
+      unit:"ELEC 101",
+      title:"DC Circuits Lab Report",
+      due:"2025-03-15",
+      status:"submitted",
+      grade:82,
+      notes:"Completed lab and analysis on Ohm's law and Kirchhoff's laws."
+    },
+    {
+      id:"a2",
+      unit:"ELEC 130",
+      title:"Intro to Programming for Engineers",
+      due:"2025-03-28",
+      status:"submitted",
+      grade:88,
+      notes:"C program to sample sensor data and calculate RMS voltage."
+    },
+    {
+      id:"a3",
+      unit:"ELEC 150",
+      title:"Logic Gates & Digital Systems Quiz",
+      due:"2025-04-02",
+      status:"submitted",
+      grade:75,
+      notes:"K-maps and combinational circuit design."
+    },
+    {
+      id:"a4",
+      unit:"ELEC 180",
+      title:"PCB Schematic Assignment",
+      due:"2025-04-18",
+      status:"pending",
+      grade:null,
+      notes:"Design a simple power supply + microcontroller interface."
+    },
+    {
+      id:"a5",
+      unit:"MATH 120",
+      title:"Engineering Mathematics Test",
+      due:"2025-03-05",
+      status:"submitted",
+      grade:69,
+      notes:"Complex numbers and phasors."
+    }
   ];
+
   let state = JSON.parse(localStorage.getItem("sp_state") || "null");
   if(!state){
     state = {profile:defaultProfile,assignments:demoAssignments};
@@ -725,11 +678,8 @@
     const p=state.profile;
     document.getElementById("profileName").innerText=p.name;
     document.getElementById("profileDegree").innerText=p.degree;
-    document.getElementById("profileAge").innerText=p.age;
     document.getElementById("profileID").innerText=p.id;
-    document.getElementById("profileEmail").innerText=p.email;
-    document.getElementById("profilePhone").innerText=p.phone || "—";
-    document.getElementById("profileHelpdesk").innerText=p.helpdesk || "Not set";
+    document.getElementById("profileDOB").innerText=p.dob || "";
     const first=p.name.split(" ")[0]||"Student";
     document.getElementById("welcomeName").innerText=first;
     const initials=(p.name.split(" ").map(s=>s[0]).join("").slice(0,2)||"SP").toUpperCase();
@@ -739,10 +689,10 @@
   function editProfile(){
     const p=state.profile;
     const body=`
-      <label>Name<br><input id="pf_name" class="input" value="${escapeHtml(p.name)}"></label><br>
-      <label>Age<br><input id="pf_age" class="input" type="number" value="${p.age}"></label><br>
+      <label>Full name<br><input id="pf_name" class="input" value="${escapeHtml(p.name)}"></label><br>
       <label>Degree<br><input id="pf_deg" class="input" value="${escapeHtml(p.degree)}"></label><br>
       <label>Student ID<br><input id="pf_id" class="input" value="${escapeHtml(p.id)}"></label><br>
+      <label>Date of birth<br><input id="pf_dob" class="input" value="${escapeHtml(p.dob || "")}" placeholder="2/11/2006"></label><br>
       <button class="btn-link" onclick="saveProfile()">Save</button>
     `;
     openModal("Edit profile",body);
@@ -751,15 +701,15 @@
   function saveProfile(){
     const p=state.profile;
     p.name=document.getElementById("pf_name").value||p.name;
-    p.age=Number(document.getElementById("pf_age").value)||p.age;
     p.degree=document.getElementById("pf_deg").value||p.degree;
     p.id=document.getElementById("pf_id").value||p.id;
+    p.dob=document.getElementById("pf_dob").value||p.dob;
     persist();
     renderProfile();
     closeModal();
   }
 
-  /* SETTINGS (phone, email, help desk) */
+  /* SETTINGS (email, phone, helpdesk) */
   function openSettings(){
     const p=state.profile;
     const body = `
@@ -787,7 +737,7 @@
     closeModal();
   }
 
-  /* FULLSCREEN ID CARD IMAGE (animated, swipe down to close) */
+  /* FULLSCREEN ID CARD IMAGE */
   function openIdCard(){
     const body = `
       <div class="id-fullscreen-wrapper">
@@ -936,7 +886,7 @@
     URL.revokeObjectURL(url);
   }
 
-  /* MODAL + HELPERS (with animated fullscreen + swipe-down close) */
+  /* MODAL + HELPERS (with animated fullscreen + swipe-up close) */
   function openModal(title,html,options={}){
     const backdrop=document.getElementById("modal");
     const dialog=backdrop.querySelector(".modal");
@@ -982,7 +932,7 @@
   function persist(){localStorage.setItem("sp_state",JSON.stringify(state));}
   function openFeature(name){alert("Open feature: "+name);}
 
-  /* SWIPE DOWN TO CLOSE (fullscreen modals) */
+  /* SWIPE UP TO CLOSE (fullscreen modals) */
   let touchStartY = null;
   let touchCurrentY = null;
   let isDraggingModal = false;
@@ -1005,9 +955,11 @@
     touchCurrentY = e.touches[0].clientY;
     const diff = touchCurrentY - touchStartY;
     const dialog=document.querySelector("#modal .modal");
-    if(diff > 0 && dialog){
+
+    // swipe UP only (diff < 0)
+    if(diff < 0 && dialog){
       dialog.style.transform = `translateY(${diff}px)`;
-      dialog.style.opacity = String(Math.max(0.4, 1 - diff/300));
+      dialog.style.opacity = String(Math.max(0.4, 1 - (-diff/300)));
     }
   }
 
@@ -1022,11 +974,11 @@
 
     if(!dialog) return;
 
-    // reset transform before deciding
+    // reset transform
     dialog.style.transform = "";
     dialog.style.opacity = "";
 
-    if(diff > 80){
+    if(diff < -80){
       closeModal();
     }
   }
