@@ -259,6 +259,127 @@
       font-size:13px;
     }
     .profile-label{font-weight:600;font-size:12px;color:var(--muted);}
+    .profile-row-clickable{
+      cursor:pointer;
+    }
+
+    /* ID CARD (fullscreen view) */
+    .id-card-full{
+      width:100%;
+      max-width:340px;
+      margin:0 auto;
+      border-radius:20px;
+      padding:16px 18px 18px;
+      background:linear-gradient(135deg,#1159c4,#1e3a8a);
+      color:#fff;
+      box-shadow:0 20px 50px rgba(15,23,42,.7);
+      position:relative;
+      overflow:hidden;
+    }
+    .id-card-full::before{
+      content:"";
+      position:absolute;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.07);
+      top:-60px;
+      right:-40px;
+    }
+    .id-card-header{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:14px;
+      position:relative;
+      z-index:1;
+    }
+    .id-card-logo{
+      width:40px;
+      height:40px;
+      border-radius:12px;
+      background:rgba(255,255,255,0.9);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+    .id-card-logo img{
+      width:80%;
+      height:80%;
+      object-fit:contain;
+    }
+    .id-card-header-text{
+      display:flex;
+      flex-direction:column;
+    }
+    .id-card-title{
+      font-size:14px;
+      font-weight:700;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+    }
+    .id-card-subtitle{
+      font-size:11px;
+      opacity:0.9;
+    }
+    .id-card-body{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      position:relative;
+      z-index:1;
+    }
+    .id-card-avatar{
+      width:70px;
+      height:70px;
+      border-radius:22px;
+      background:rgba(15,23,42,0.85);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      font-size:26px;
+    }
+    .id-card-info{
+      flex:1;
+      font-size:12px;
+    }
+    .id-card-name{
+      font-size:16px;
+      font-weight:800;
+      margin-bottom:2px;
+    }
+    .id-card-degree{
+      font-size:12px;
+      opacity:0.9;
+      margin-bottom:6px;
+    }
+    .id-card-row{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      font-size:11px;
+      opacity:0.95;
+    }
+    .id-card-row span:first-child{
+      text-transform:uppercase;
+      letter-spacing:0.08em;
+      font-weight:600;
+      opacity:0.8;
+    }
+    .id-card-footer{
+      margin-top:14px;
+      border-top:1px solid rgba(255,255,255,0.14);
+      padding-top:8px;
+      font-size:10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      position:relative;
+      z-index:1;
+      opacity:0.9;
+    }
 
     /* MODAL */
     .modal-backdrop{
@@ -276,6 +397,8 @@
       border-radius:16px;
       padding:14px 14px 16px;
       box-shadow:0 20px 40px rgba(15,23,42,.55);
+      max-height:90vh;
+      overflow:auto;
     }
     .modal-head{
       display:flex;
@@ -292,6 +415,23 @@
       border-radius:10px;
       font-size:13px;
       cursor:pointer;
+    }
+
+    /* FULLSCREEN MODAL for ID card */
+    .modal-fullscreen{
+      width:100vw;
+      height:100vh;
+      max-width:none;
+      border-radius:0;
+      display:flex;
+      flex-direction:column;
+      padding:14px 14px 20px;
+    }
+    .modal-fullscreen .modal-body{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
 
     /* BOTTOM NAV */
@@ -527,6 +667,11 @@
       <div class="profile-degree" id="profileDegree">Bachelor of Education</div>
 
       <div class="profile-info">
+        <!-- NEW: student ID row (tap to open fullscreen card) -->
+        <div class="profile-row profile-row-clickable" onclick="openIdCard()">
+          <div class="profile-label">Student ID</div>
+          <div id="profileID">123456</div>
+        </div>
         <div class="profile-row">
           <div class="profile-label">Age</div>
           <div id="profileAge">19</div>
@@ -537,12 +682,14 @@
         </div>
         <div class="profile-row">
           <div class="profile-label">Phone Number</div>
-          <div id="profileEmail">0415-601-071</div>
+          <div id="profilePhone">0415-601-071</div>
         </div>
       </div>
 
-      <div style="margin-top:12px;text-align:left">
+      <div style="margin-top:12px;text-align:left;display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn-link" onclick="editProfile()">Edit profile</button>
+        <!-- NEW: extra button to view the ID card -->
+        <button class="btn-link" onclick="openIdCard()">View ID card</button>
       </div>
     </div>
   </section>
@@ -601,7 +748,8 @@
     age:21,
     degree:"Bachelor of Education",
     id:"123456",
-    email:"john@example.com"
+    email:"john@example.com",
+    phone:"0415-601-071"
   };
   const demoAssignments = [
     {id:"a1",unit:"EDUC 101",title:"Professional Experience Reflection",due:"2025-11-15",status:"submitted",grade:88,notes:"Submitted via portal"},
@@ -636,31 +784,71 @@
     document.getElementById("profileAge").innerText=p.age;
     document.getElementById("profileID").innerText=p.id;
     document.getElementById("profileEmail").innerText=p.email;
+    document.getElementById("profilePhone").innerText=p.phone || "—";
     const first=p.name.split(" ")[0]||"Student";
     document.getElementById("welcomeName").innerText=first;
     const initials=(p.name.split(" ").map(s=>s[0]).join("").slice(0,2)||"SP").toUpperCase();
     document.getElementById("avatarInitials").innerText=initials;
   }
+
   function editProfile(){
     const p=state.profile;
     const body=`
       <label>Name<br><input id="pf_name" class="input" value="${escapeHtml(p.name)}"></label><br>
       <label>Age<br><input id="pf_age" class="input" type="number" value="${p.age}"></label><br>
       <label>Degree<br><input id="pf_deg" class="input" value="${escapeHtml(p.degree)}"></label><br>
+      <label>Student ID<br><input id="pf_id" class="input" value="${escapeHtml(p.id)}"></label><br>
       <label>Email<br><input id="pf_email" class="input" value="${escapeHtml(p.email)}"></label><br>
+      <label>Phone<br><input id="pf_phone" class="input" value="${escapeHtml(p.phone || "")}"></label><br>
       <button class="btn-link" onclick="saveProfile()">Save</button>
     `;
     openModal("Edit profile",body);
   }
+
   function saveProfile(){
     const p=state.profile;
     p.name=document.getElementById("pf_name").value||p.name;
     p.age=Number(document.getElementById("pf_age").value)||p.age;
     p.degree=document.getElementById("pf_deg").value||p.degree;
+    p.id=document.getElementById("pf_id").value||p.id;
     p.email=document.getElementById("pf_email").value||p.email;
+    p.phone=document.getElementById("pf_phone").value||p.phone;
     persist();
     renderProfile();
     closeModal();
+  }
+
+  /* FULLSCREEN ID CARD */
+  function openIdCard(){
+    const p = state.profile;
+    const initials = (p.name.split(" ").map(s=>s[0]).join("").slice(0,2) || "SP").toUpperCase();
+    const body = `
+      <div class="id-card-full">
+        <div class="id-card-header">
+          <div class="id-card-logo">
+            <img src="icons/icon-192.png" alt="Portal logo">
+          </div>
+          <div class="id-card-header-text">
+            <div class="id-card-title">Student ID</div>
+            <div class="id-card-subtitle">Student Portal</div>
+          </div>
+        </div>
+        <div class="id-card-body">
+          <div class="id-card-avatar">${initials}</div>
+          <div class="id-card-info">
+            <div class="id-card-name">${escapeHtml(p.name)}</div>
+            <div class="id-card-degree">${escapeHtml(p.degree)}</div>
+            <div class="id-card-row"><span>ID</span><span>${escapeHtml(p.id)}</span></div>
+            <div class="id-card-row"><span>Email</span><span>${escapeHtml(p.email)}</span></div>
+          </div>
+        </div>
+        <div class="id-card-footer">
+          <span>${location.hostname || "student-portal"}</span>
+          <span>ID valid · ${new Date().getFullYear()}</span>
+        </div>
+      </div>
+    `;
+    openModal("Student ID card", body, { fullscreen: true });
   }
 
   /* ASSIGNMENTS */
@@ -803,17 +991,25 @@
   }
 
   /* MODAL + HELPERS */
-  function openModal(title,html){
+  function openModal(title,html,options={}){
     document.getElementById("modalTitle").innerText=title;
     document.getElementById("modalBody").innerHTML=html;
-    const m=document.getElementById("modal");
-    m.style.display="flex";
-    m.setAttribute("aria-hidden","false");
+    const backdrop=document.getElementById("modal");
+    const dialog=backdrop.querySelector(".modal");
+    if(options.fullscreen){
+      dialog.classList.add("modal-fullscreen");
+    } else {
+      dialog.classList.remove("modal-fullscreen");
+    }
+    backdrop.style.display="flex";
+    backdrop.setAttribute("aria-hidden","false");
   }
   function closeModal(){
-    const m=document.getElementById("modal");
-    m.style.display="none";
-    m.setAttribute("aria-hidden","true");
+    const backdrop=document.getElementById("modal");
+    const dialog=backdrop.querySelector(".modal");
+    dialog.classList.remove("modal-fullscreen");
+    backdrop.style.display="none";
+    backdrop.setAttribute("aria-hidden","true");
   }
   function escapeHtml(s){
     if(!s) return "";
