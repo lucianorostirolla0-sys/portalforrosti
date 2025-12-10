@@ -2,136 +2,331 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-
-  <!-- App title -->
   <title>Student Portal</title>
 
-  <!-- Mobile viewport -->
+  <!-- Mobile / PWA meta -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
-  <!-- Theme colour (status bar etc.) -->
-  <meta name="theme-color" content="#1b5fbf">
-
-  <!-- PWA manifest -->
+  <meta name="theme-color" content="#1159c4">
   <link rel="manifest" href="manifest.json">
-
-  <!-- iOS app-like behaviour -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Student Portal">
-
-  <!-- Icons (make sure these files exist) -->
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
 
   <style>
     :root{
-      --brand:#1b5fbf;
-      --accent:#ffb100;
-      --bg:#f4f7ff;
+      --brand:#1159c4;
+      --bg:#f4f6ff;
       --card:#ffffff;
       --muted:#6b7280;
-      --radius:14px;
-      --glass: rgba(255,255,255,0.8);
+      --radius:16px;
     }
-    /* Basic reset */
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#0f172a;background:var(--bg);-webkit-font-smoothing:antialiased}
-    a{color:inherit;text-decoration:none}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      background:var(--bg);
+      color:#0f172a;
+      -webkit-font-smoothing:antialiased;
+    }
+    a{text-decoration:none;color:inherit}
 
-    /* App chrome */
+    /* HEADER */
     .topbar{
-      background:linear-gradient(90deg,var(--brand), #1a4fa2);
-      color:white;
-      padding:12px 14px;
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:var(--brand);
+      color:#fff;
+      padding:16px 16px 20px;
       display:flex;
-      gap:12px;
       align-items:center;
-      position:sticky; top:0; z-index:30;
-      box-shadow: 0 6px 18px rgba(12,18,40,0.08);
+      gap:12px;
+      border-bottom-left-radius:18px;
+      border-bottom-right-radius:18px;
+      box-shadow:0 10px 24px rgba(15,23,42,.35);
     }
-    .logo {
-      width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#fff,rgba(255,255,255,0.9));display:flex;align-items:center;justify-content:center;color:var(--brand);font-weight:700;font-size:16px;
-      box-shadow:0 6px 18px rgba(12,18,40,0.06);
+    .logo{
+      width:40px;
+      height:40px;
+      border-radius:10px;
+      background:#ffffff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
     }
-    .title{font-weight:700;font-size:16px}
-    .subtitle{font-size:12px;color:rgba(255,255,255,0.9)}
+    .logo img{
+      width:80%;
+      height:80%;
+      object-fit:contain;
+    }
+    .header-text{flex:1;min-width:0}
+    .header-title{
+      font-size:16px;
+      font-weight:700;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .header-sub{
+      font-size:12px;
+      opacity:.9;
+    }
+    .header-actions button{
+      background:transparent;
+      border:0;
+      color:#fff;
+      padding:6px;
+      cursor:pointer;
+    }
 
-    /* Page container and transitions */
-    main{padding:12px;padding-bottom:85px;min-height:calc(100vh - 72px)}
-    .page{display:none; transform-origin:top center; }
-    .page.active{display:block; animation:fadeUp .28s ease both}
-    @keyframes fadeUp{ from{opacity:0; transform: translateY(8px) scale(.998)} to{opacity:1; transform:none} }
+    /* LAYOUT */
+    main{
+      padding:12px;
+      padding-bottom:90px;
+      max-width:900px;
+      margin:0 auto;
+    }
+    .page{display:none;animation:fadeUp .25s ease-out;}
+    .page.active{display:block;}
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(6px);}
+      to{opacity:1;transform:none;}
+    }
 
-    /* Cards */
+    /* CARDS */
     .card{
       background:var(--card);
       border-radius:var(--radius);
-      padding:12px;
+      padding:14px 14px;
+      box-shadow:0 10px 28px rgba(15,23,42,.08);
       margin-bottom:12px;
-      box-shadow:0 8px 20px rgba(12,18,40,0.06);
-      transition: transform .18s ease, box-shadow .18s ease;
     }
-    .card:hover{ transform: translateY(-4px); box-shadow: 0 14px 30px rgba(12,18,40,0.09) }
 
-    /* Schedule */
-    .schedule{
-      display:flex; gap:10px; overflow:auto; padding-bottom:6px;
+    .pill{
+      border-radius:999px;
+      border:1px solid #e5e7eb;
+      padding:6px 14px;
+      font-size:12px;
+      background:#fff;
     }
-    .schedule .tile{
-      min-width:150px; flex:0 0 auto;
-      background:linear-gradient(180deg, rgba(27,95,191,0.06), rgba(27,95,191,0.02));
-      border-radius:12px; padding:12px;
+    .muted{color:var(--muted);}
+    .small{font-size:13px;}
+
+    /* HOME – quick actions & timetable snapshot */
+    .home-top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
     }
-    .date{font-weight:700;color:var(--brand); font-size:13px}
-    .time{font-weight:600}
+    .home-top-main{flex:1;}
+    .home-top-title{font-weight:800;}
+    .home-top-sub{font-size:13px;color:var(--muted);margin-top:4px;}
 
-    /* Quick features */
-    .features{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-    .feature{flex:1 1 22%;min-width:90px;text-align:center;padding:10px;border-radius:12px;background:var(--card);cursor:pointer;box-shadow:0 8px 22px rgba(12,18,40,0.04);transition:transform .12s}
-    .feature:active{transform:scale(.99)}
-    .feature svg{display:block;margin:0 auto 8px}
+    .quick-grid{
+      display:flex;
+      gap:10px;
+      margin-top:10px;
+    }
+    .quick-item{
+      flex:1;
+      min-width:80px;
+      border-radius:14px;
+      background:#f9fbff;
+      box-shadow:0 8px 18px rgba(15,23,42,.04);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:8px 4px;
+      cursor:pointer;
+      transition:transform .12s ease, box-shadow .12s ease;
+    }
+    .quick-item:hover{
+      transform:translateY(-2px);
+      box-shadow:0 10px 24px rgba(15,23,42,.08);
+    }
+    .quick-label{font-size:12px;margin-top:4px;}
 
-    /* Timetable */
-    .timetable .day{display:flex;gap:8px;align-items:center}
-    .slot{flex:1;padding:10px;border-radius:10px;background:linear-gradient(180deg,#fff,#fbfdff); box-shadow:0 6px 18px rgba(12,18,40,0.04)}
-    .slot .unit{font-weight:700}
-    .slot .meta{color:var(--muted);font-size:13px;margin-top:6px}
+    .snap-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+    }
+    .snap-grid{
+      display:flex;
+      gap:8px;
+      overflow-x:auto;
+      padding-bottom:4px;
+    }
+    .snap-card{
+      min-width:90px;
+      border-radius:12px;
+      background:#f6f8ff;
+      padding:8px;
+      cursor:pointer;
+    }
+    .snap-day{font-weight:700;color:var(--brand);font-size:13px;}
+    .snap-time{font-size:13px;margin-top:2px;}
+    .snap-sub{font-size:12px;color:var(--muted);margin-top:2px;}
 
-    /* Assignments */
-    .assign-controls{display:flex;gap:8px;margin-bottom:10px;align-items:center}
-    .select, .input{padding:8px;border-radius:10px;border:1px solid #e7e9f2;background:white;font-size:14px}
-    .assign-list{display:flex;flex-direction:column;gap:10px;margin-top:6px}
-    .assign-row{display:flex;justify-content:space-between;gap:8px;align-items:center}
-    .assign-left{display:flex;gap:10px;align-items:center}
-    .badge{font-size:12px;padding:6px 8px;border-radius:999px;background:#eef3ff;color:var(--brand);font-weight:700}
-    .progress{height:8px;background:#f1f5f9;border-radius:999px;overflow:hidden;width:120px}
-    .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--brand),#1760b4);}
+    /* TIMETABLE */
+    .day-card{margin-bottom:12px;}
+    .day-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:8px;
+    }
+    .slot{
+      background:#f9fbff;
+      border-radius:12px;
+      padding:10px;
+      margin-top:6px;
+    }
+    .slot-title{font-weight:700;font-size:14px;}
+    .slot-meta{font-size:13px;color:var(--muted);margin-top:2px;}
 
-    /* Modal */
-    .modal-backdrop{position:fixed;inset:0;background:rgba(6,8,20,0.45);display:none;align-items:center;justify-content:center;z-index:80}
-    .modal{width:min(420px,94%);background:var(--card);border-radius:14px;padding:16px;box-shadow:0 20px 40px rgba(2,6,23,0.45)}
-    .modal h3{margin:0 0 8px}
+    /* ASSIGNMENTS */
+    .assign-controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:8px;
+      margin-bottom:8px;
+    }
+    .input, .select{
+      padding:8px;
+      border-radius:10px;
+      border:1px solid #e5e7eb;
+      background:#fff;
+      font-size:13px;
+    }
+    .assign-list{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
+    .assign-row{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      align-items:center;
+    }
+    .assign-left{flex:1;}
+    .badge{
+      display:inline-block;
+      padding:4px 8px;
+      border-radius:999px;
+      font-size:11px;
+      background:#e0ebff;
+      color:var(--brand);
+      font-weight:600;
+    }
 
-    /* Profile */
-    .profile .avatar{width:96px;height:96px;border-radius:20px;background:linear-gradient(180deg,#fff,#f2f6ff);display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;color:var(--brand);margin-bottom:10px}
+    /* PROFILE */
+    .profile-card{text-align:center;}
+    .avatar{
+      width:90px;
+      height:90px;
+      border-radius:24px;
+      background:#ffffff;
+      margin:0 auto 8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      box-shadow:0 10px 26px rgba(15,23,42,.15);
+    }
+    .avatar span{
+      font-weight:800;
+      font-size:26px;
+      color:var(--brand);
+    }
+    .profile-name{font-weight:800;font-size:18px;margin-top:4px;}
+    .profile-degree{font-size:13px;color:var(--muted);}
+    .profile-info{
+      text-align:left;
+      margin-top:14px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .profile-row{
+      background:#f9fbff;
+      border-radius:12px;
+      padding:8px 10px;
+      font-size:13px;
+    }
+    .profile-label{font-weight:600;font-size:12px;color:var(--muted);}
 
-    /* Bottom nav */
-    .bottom-nav{position:fixed;left:10px;right:10px;bottom:12px;background:var(--card);padding:8px;border-radius:16px;display:flex;justify-content:space-around;box-shadow:0 12px 30px rgba(12,18,40,0.08);z-index:40}
-    .nav-item{display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--muted);cursor:pointer}
-    .nav-item.active{color:var(--brand);font-weight:700}
-    .nav-item svg{margin-bottom:4px}
+    /* MODAL */
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:40;
+    }
+    .modal{
+      background:#fff;
+      width:min(420px,94vw);
+      border-radius:16px;
+      padding:14px 14px 16px;
+      box-shadow:0 20px 40px rgba(15,23,42,.55);
+    }
+    .modal-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:8px;
+    }
+    .modal-head h3{font-size:16px;}
+    .modal-body{font-size:13px;color:#111827;}
+    .btn-link{
+      border:0;
+      background:#eef2ff;
+      padding:7px 10px;
+      border-radius:10px;
+      font-size:13px;
+      cursor:pointer;
+    }
 
-    /* Utilities */
-    .muted{color:var(--muted)}
-    .row{display:flex;gap:8px;align-items:center}
-    .small{font-size:13px}
-    .pill{padding:6px 10px;border-radius:999px;background:#f8fafc;border:1px solid #eef2ff}
+    /* BOTTOM NAV */
+    .bottom-nav{
+      position:fixed;
+      left:8px;
+      right:8px;
+      bottom:10px;
+      background:#ffffff;
+      border-radius:18px;
+      padding:6px 4px;
+      display:flex;
+      justify-content:space-around;
+      box-shadow:0 10px 30px rgba(15,23,42,.18);
+      z-index:30;
+    }
+    .nav-item{
+      flex:1;
+      text-align:center;
+      font-size:11px;
+      color:var(--muted);
+      cursor:pointer;
+      padding:4px 0;
+    }
+    .nav-item span{
+      display:block;
+      margin-top:2px;
+    }
+    .nav-item.active{
+      color:var(--brand);
+      font-weight:600;
+    }
 
-    @media(min-width:900px){
-      main{max-width:920px;margin:0 auto}
-      .features{justify-content:flex-start}
+    @media (min-width:900px){
+      main{padding-top:16px;}
     }
   </style>
 </head>
@@ -139,163 +334,165 @@
 
 <header class="topbar" role="banner">
   <div class="logo">
+    <!-- Uses your emblem -->
     <img src="icons/icon-192.png" alt="Portal logo">
   </div>
-
-  <div style="flex:1">
-    <div class="title" id="appTitle">Student Portal</div>
-    <div class="subtitle" id="userWelcome">
-      Welcome, <span id="welcomeName">Student</span>
-    </div>
+  <div class="header-text">
+    <div class="header-title" id="appTitle">Student Portal — Home</div>
+    <div class="header-sub">Welcome, <span id="welcomeName">Student</span></div>
   </div>
-
-  <div style="display:flex;gap:8px;align-items:center">
-    <button aria-label="Search" title="Search"
-            style="background:transparent;border:0;color:white;padding:6px">
+  <div class="header-actions">
+    <button aria-label="Search">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-              d="M21 21l-4.35-4.35"/>
         <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/>
+        <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
   </div>
 </header>
 
-<!-- MAIN -->
 <main>
-  <!-- HOME PAGE -->
-  <section id="homePage" class="page active" aria-labelledby="homeHeading">
+  <!-- HOME -->
+  <section id="homePage" class="page active">
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div>
+      <div class="home-top">
+        <div class="home-top-main">
           <div class="small muted">Next class</div>
-          <div style="font-weight:800">EDUC 101 — Professional Experience</div>
-          <div class="muted small">Today · 9:00 — 12:00 · Building A</div>
+          <div class="home-top-title">EDUC 101 — Professional Experience</div>
+          <div class="home-top-sub">Today · 9:00 – 12:00 · Building A</div>
         </div>
-        <div class="pill">On campus</div>
+        <div><span class="pill">On campus</span></div>
       </div>
     </div>
 
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="home-top">
         <div>
-          <div class="muted small">Quick actions</div>
-          <div style="font-weight:800">Open tools & links</div>
+          <div class="small muted">Quick actions</div>
+          <div class="home-top-title">Open tools & links</div>
         </div>
-        <div class="row">
-          <div class="feature" onclick="openFeature('email')">
-            <!-- email icon -->
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 8.5l8.5 5.25L20 8.5" stroke="#1b5fbf" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="5" width="18" height="14" rx="2" stroke="#1b5fbf" stroke-width="1.6"/></svg>
-            <div style="font-size:12px;margin-top:6px">Email</div>
-          </div>
-          <div class="feature" onclick="openFeature('maps')">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M20.5 3.5l-5 2.3L9 3 3.5 5.2v13.3L9 20.5l6.5-2.8 5 2.8V3.5z" stroke="#1b5fbf" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <div style="font-size:12px;margin-top:6px">Maps</div>
-          </div>
-          <div class="feature" onclick="switchTo('assignments')">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="#1b5fbf" stroke-width="1.4"/><path d="M8 9h8" stroke="#1b5fbf" stroke-width="1.4" stroke-linecap="round"/></svg>
-            <div style="font-size:12px;margin-top:6px">Assignments</div>
-          </div>
+      </div>
+      <div class="quick-grid">
+        <div class="quick-item" onclick="openFeature('email')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="5" width="18" height="14" rx="2" stroke="#1159c4" stroke-width="1.6"/>
+            <path d="M3 8.5l9 6 9-6" stroke="#1159c4" stroke-width="1.6"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="quick-label">Email</div>
+        </div>
+        <div class="quick-item" onclick="openFeature('maps')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M6 4l6-2 6 2v16l-6 2-6-2V4z" stroke="#1159c4" stroke-width="1.6"
+                  stroke-linejoin="round"/>
+            <path d="M12 2v18" stroke="#1159c4" stroke-width="1.6" stroke-linejoin="round"/>
+          </svg>
+          <div class="quick-label">Maps</div>
+        </div>
+        <div class="quick-item" onclick="switchTo('assignments')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="4" width="18" height="16" rx="2" stroke="#1159c4" stroke-width="1.6"/>
+            <path d="M8 9h8" stroke="#1159c4" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <div class="quick-label">Assignments</div>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="snap-header">
         <div>
-          <div class="muted small">Upcoming week</div>
-          <div style="font-weight:800">Timetable snapshot</div>
+          <div class="small muted">Upcoming week</div>
+          <div class="home-top-title">Timetable snapshot</div>
         </div>
         <div class="small muted">Tap to open</div>
       </div>
-
-      <div class="schedule" style="margin-top:12px">
-        <div class="tile" onclick="switchTo('timetable')">
-          <div class="date">Mon</div>
-          <div class="time">9:00</div>
-          <div class="small muted">EDUC 101</div>
+      <div class="snap-grid">
+        <div class="snap-card" onclick="switchTo('timetable')">
+          <div class="snap-day">Mon</div>
+          <div class="snap-time">9:00</div>
+          <div class="snap-sub">EDUC 101</div>
         </div>
-        <div class="tile" onclick="switchTo('timetable')">
-          <div class="date">Tue</div>
-          <div class="time">10:00</div>
-          <div class="small muted">EDUC 202</div>
+        <div class="snap-card" onclick="switchTo('timetable')">
+          <div class="snap-day">Tue</div>
+          <div class="snap-time">10:00</div>
+          <div class="snap-sub">EDUC 202</div>
         </div>
-        <div class="tile" onclick="switchTo('timetable')">
-          <div class="date">Thu</div>
-          <div class="time">14:00</div>
-          <div class="small muted">EDUC 301</div>
+        <div class="snap-card" onclick="switchTo('timetable')">
+          <div class="snap-day">Thu</div>
+          <div class="snap-time">14:00</div>
+          <div class="snap-sub">EDUC 301</div>
         </div>
       </div>
     </div>
-
   </section>
 
-  <!-- TIMETABLE PAGE -->
-  <section id="timetablePage" class="page" aria-labelledby="timetableHeading">
+  <!-- TIMETABLE -->
+  <section id="timetablePage" class="page">
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div><div class="small muted">This week</div><div style="font-weight:800">My timetable</div></div>
+      <div class="day-head">
+        <div>
+          <div class="small muted">This week</div>
+          <div class="home-top-title">My timetable</div>
+        </div>
         <div class="small muted">Local time</div>
       </div>
 
-      <div style="margin-top:12px" class="timetable">
-        <div class="day card">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <div style="font-weight:800">Monday</div>
-              <div class="muted small">2 sessions</div>
-            </div>
-            <div class="small muted">9:00 — 15:00</div>
-          </div>
-
-          <div style="display:flex;gap:10px;margin-top:10px;flex-direction:column">
-            <div class="slot">
-              <div class="unit">EDUC 101</div>
-              <div class="meta">9:00 — 12:00 · Building A · Room 21</div>
-            </div>
-            <div class="slot">
-              <div class="unit">Study Group</div>
-              <div class="meta">13:00 — 15:00 · Library Hub</div>
-            </div>
-          </div>
+      <div class="day-card">
+        <div class="day-head">
+          <div class="home-top-title">Monday</div>
+          <div class="small muted">2 sessions</div>
         </div>
-
-        <div class="day card">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <div style="font-weight:800">Tuesday</div>
-              <div class="muted small">1 session</div>
-            </div>
-            <div class="small muted">10:00 — 12:00</div>
-          </div>
-
-          <div style="margin-top:10px">
-            <div class="slot">
-              <div class="unit">EDUC 202</div>
-              <div class="meta">10:00 — 12:00 · Studio 3</div>
-            </div>
-          </div>
+        <div class="slot">
+          <div class="slot-title">EDUC 101</div>
+          <div class="slot-meta">9:00 – 12:00 · Building A · Room 21</div>
         </div>
+        <div class="slot">
+          <div class="slot-title">Study Group</div>
+          <div class="slot-meta">13:00 – 15:00 · Library Hub</div>
+        </div>
+      </div>
 
+      <div class="day-card">
+        <div class="day-head">
+          <div class="home-top-title">Tuesday</div>
+          <div class="small muted">1 session</div>
+        </div>
+        <div class="slot">
+          <div class="slot-title">EDUC 202</div>
+          <div class="slot-meta">10:00 – 12:00 · Studio 3</div>
+        </div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-head">
+          <div class="home-top-title">Thursday</div>
+          <div class="small muted">1 session</div>
+        </div>
+        <div class="slot">
+          <div class="slot-title">EDUC 301</div>
+          <div class="slot-meta">14:00 – 16:00 · Tech Workshop</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ASSIGNMENTS & GRADES PAGE -->
-  <section id="assignmentsPage" class="page" aria-labelledby="assignmentsHeading">
+  <!-- ASSIGNMENTS -->
+  <section id="assignmentsPage" class="page">
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="home-top">
         <div>
           <div class="small muted">Track your work</div>
-          <div style="font-weight:800">Assignments & Grades</div>
+          <div class="home-top-title">Assignments & grades</div>
         </div>
-        <div class="row">
-          <div class="muted small" style="margin-right:6px">Average</div>
-          <div id="avgBadge" class="badge">--%</div>
+        <div>
+          <span class="small muted">Average</span>
+          <span id="avgBadge" class="badge">--%</span>
         </div>
       </div>
 
-      <div style="margin-top:12px" class="assign-controls">
+      <div class="assign-controls">
         <select id="filterUnit" class="select" onchange="renderAssignments()">
           <option value="all">All units</option>
         </select>
@@ -313,400 +510,330 @@
         </select>
       </div>
 
-      <div class="assign-list" id="assignList">
-        <!-- items injected by JS -->
-      </div>
+      <div id="assignList" class="assign-list"></div>
 
-      <div style="margin-top:10px;display:flex;gap:8px">
-        <button class="select" onclick="openAddAssignment()">+ Add assignment</button>
-        <button class="select" onclick="exportAssignments()">Export</button>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-link" onclick="openAddAssignment()">+ Add assignment</button>
+        <button class="btn-link" onclick="exportAssignments()">Export JSON</button>
       </div>
     </div>
   </section>
 
-  <!-- PROFILE PAGE -->
-  <section id="profilePage" class="page" aria-labelledby="profileHeading">
-    <div class="card profile">
-      <div class="avatar" id="avatarInitials">JD</div>
-      <div style="font-weight:800;font-size:18px" id="profileName">John Doe</div>
-      <div class="muted small" id="profileDegree">Bachelor of Education</div>
+  <!-- PROFILE -->
+  <section id="profilePage" class="page">
+    <div class="card profile-card">
+      <div class="avatar"><span id="avatarInitials">JD</span></div>
+      <div class="profile-name" id="profileName">John Doe</div>
+      <div class="profile-degree" id="profileDegree">Bachelor of Education</div>
 
-      <div style="margin-top:14px">
-        <div class="card small">
-          <div><strong>Age</strong></div>
-          <div class="muted" id="profileAge">21</div>
+      <div class="profile-info">
+        <div class="profile-row">
+          <div class="profile-label">Age</div>
+          <div id="profileAge">21</div>
         </div>
-        <div class="card small">
-          <div><strong>Student ID</strong></div>
-          <div class="muted" id="profileID">123456</div>
+        <div class="profile-row">
+          <div class="profile-label">Student ID</div>
+          <div id="profileID">123456</div>
         </div>
-        <div class="card small">
-          <div><strong>Email</strong></div>
-          <div class="muted" id="profileEmail">john@example.com</div>
+        <div class="profile-row">
+          <div class="profile-label">Email</div>
+          <div id="profileEmail">john@example.com</div>
         </div>
       </div>
 
-      <div style="margin-top:12px">
-        <button class="select" onclick="editProfile()">Edit profile</button>
+      <div style="margin-top:12px;text-align:left">
+        <button class="btn-link" onclick="editProfile()">Edit profile</button>
       </div>
     </div>
   </section>
 </main>
 
-<!-- Modal for assignment detail + add form -->
-<div id="modal" class="modal-backdrop" role="dialog" aria-hidden="true">
-  <div class="modal" role="document" aria-modal="true">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <h3 id="modalTitle">Assignment</h3>
-      <button onclick="closeModal()" aria-label="Close" style="border:0;background:transparent;font-size:20px;cursor:pointer">✕</button>
+<!-- MODAL -->
+<div id="modal" class="modal-backdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <h3 id="modalTitle">Modal</h3>
+      <button class="btn-link" onclick="closeModal()">Close</button>
     </div>
-    <div id="modalBody"></div>
+    <div id="modalBody" class="modal-body"></div>
   </div>
 </div>
 
-<!-- Bottom nav -->
-<nav class="bottom-nav" role="navigation" aria-label="Main">
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
   <div class="nav-item active" data-page="home" onclick="switchTo('home')">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 11.5L12 5l9 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 21V11h14v10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M3 11.5L12 5l9 6.5" stroke="currentColor" stroke-width="1.6"
+            stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5 21V11h14v10" stroke="currentColor" stroke-width="1.6"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
     <span>Home</span>
   </div>
   <div class="nav-item" data-page="timetable" onclick="switchTo('timetable')">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M16 2v4" stroke="currentColor" stroke-width="1.6"/><path d="M8 2v4" stroke="currentColor" stroke-width="1.6"/></svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M16 2v4M8 2v4" stroke="currentColor" stroke-width="1.6"/>
+    </svg>
     <span>Timetable</span>
   </div>
   <div class="nav-item" data-page="assignments" onclick="switchTo('assignments')">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 7h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/></svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M9 8h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
     <span>Assignments</span>
   </div>
   <div class="nav-item" data-page="profile" onclick="switchTo('profile')">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M6 20c1.5-3 5-5 6-5s4.5 2 6 5" stroke="currentColor" stroke-width="1.6"/></svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M6 20c1.5-3 5-5 6-5s4.5 2 6 5" stroke="currentColor" stroke-width="1.6"
+            stroke-linecap="round"/>
+    </svg>
     <span>Profile</span>
   </div>
 </nav>
 
 <script>
-/* -----------------------
-   Demo data + persistence
-   ----------------------- */
-const defaultProfile = {
-  name: "John Doe",
-  age: 21,
-  degree: "Bachelor of Education",
-  id: "123456",
-  email: "john@example.com"
-};
-
-const demoAssignments = [
-  { id: 'a1', unit: 'EDUC 101', title: 'Professional Experience Reflection', due: '2025-11-15', status:'submitted', grade: 88, notes:'Submitted via portal' },
-  { id: 'a2', unit: 'EDUC 202', title: 'Design Teaching Plan', due: '2025-11-25', status:'pending', grade: null, notes:'' },
-  { id: 'a3', unit: 'EDUC 301', title: 'Tech Workshop Report', due: '2025-10-28', status:'overdue', grade: 72, notes:'Late submission' },
-];
-
-/* Load or initialize state from localStorage */
-let state = JSON.parse(localStorage.getItem('sp_state') || 'null');
-if(!state){
-  state = {
-    profile: defaultProfile,
-    assignments: demoAssignments
+  /* STATE */
+  const defaultProfile = {
+    name:"John Doe",
+    age:21,
+    degree:"Bachelor of Education",
+    id:"123456",
+    email:"john@example.com"
   };
-  localStorage.setItem('sp_state', JSON.stringify(state));
-}
+  const demoAssignments = [
+    {id:"a1",unit:"EDUC 101",title:"Professional Experience Reflection",due:"2025-11-15",status:"submitted",grade:88,notes:"Submitted via portal"},
+    {id:"a2",unit:"EDUC 202",title:"Design Teaching Plan",due:"2025-11-25",status:"pending",grade:null,notes:""},
+    {id:"a3",unit:"EDUC 301",title:"Tech Workshop Report",due:"2025-10-28",status:"overdue",grade:72,notes:"Late submission"},
+  ];
+  let state = JSON.parse(localStorage.getItem("sp_state") || "null");
+  if(!state){
+    state = {profile:defaultProfile,assignments:demoAssignments};
+    localStorage.setItem("sp_state",JSON.stringify(state));
+  }
 
-/* -----------------------
-   Page navigation
-   ----------------------- */
-function switchTo(page){
-  // pages: home, timetable, assignments, profile
-  const pages = {
-    home: 'homePage',
-    timetable: 'timetablePage',
-    assignments: 'assignmentsPage',
-    profile: 'profilePage'
-  };
-  // hide all
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  // show target
-  document.getElementById(pages[page]).classList.add('active');
+  /* NAVIGATION */
+  function switchTo(page){
+    const map = {home:"homePage",timetable:"timetablePage",assignments:"assignmentsPage",profile:"profilePage"};
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    document.getElementById(map[page]).classList.add("active");
+    document.querySelectorAll(".nav-item").forEach(n=>{
+      n.classList.toggle("active", n.dataset.page===page);
+    });
+    const titleMap={home:"Home",timetable:"Timetable",assignments:"Assignments",profile:"Profile"};
+    document.getElementById("appTitle").innerText="Student Portal — "+titleMap[page];
+    if(page==="assignments") renderAssignments();
+    if(page==="profile") renderProfile();
+  }
 
-  // update bottom nav active state
-  document.querySelectorAll('.nav-item').forEach(n=>{
-    const p = n.getAttribute('data-page');
-    n.classList.toggle('active', p===page);
-  });
-
-  // set header title
-  const titles = {home:'Home', timetable:'Timetable', assignments:'Assignments', profile:'Profile'};
-  document.getElementById('appTitle').innerText = 'Student Portal — ' + titles[page];
-
-  // special renderers
-  if(page==='assignments') renderAssignments();
-  if(page==='profile') renderProfile();
-}
-function switchPage(page){ switchTo(page); } // alias
-
-/* -----------------------
-   Profile
-   ----------------------- */
-function renderProfile(){
-  const p = state.profile;
-  document.getElementById('profileName').innerText = p.name;
-  document.getElementById('profileDegree').innerText = p.degree;
-  document.getElementById('profileAge').innerText = p.age;
-  document.getElementById('profileID').innerText = p.id;
-  document.getElementById('profileEmail').innerText = p.email;
-  document.getElementById('welcomeName').innerText = p.name.split(' ')[0] || 'Student';
-  const initials = (p.name.split(' ').map(n=>n[0]).join('').slice(0,2) || 'SD').toUpperCase();
-  document.getElementById('avatarInitials').innerText = initials;
-}
-function editProfile(){
-  const p = state.profile;
-  const body = `
-    <label style="display:block;margin-bottom:6px">Name<input id="pf_name" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee" value="${escapeHtml(p.name)}"></label>
-    <label style="display:block;margin-bottom:6px">Age<input id="pf_age" type="number" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee" value="${p.age}"></label>
-    <label style="display:block;margin-bottom:6px">Degree<input id="pf_deg" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee" value="${escapeHtml(p.degree)}"></label>
-    <label style="display:block;margin-bottom:6px">Email<input id="pf_email" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee" value="${escapeHtml(p.email)}"></label>
-    <div style="display:flex;gap:8px;margin-top:10px"><button onclick="saveProfile()" class="select">Save</button><button onclick="closeModal()" class="select">Cancel</button></div>
-  `;
-  openModal('Edit profile', body);
-}
-function saveProfile(){
-  const p = state.profile;
-  p.name = document.getElementById('pf_name').value || p.name;
-  p.age = Number(document.getElementById('pf_age').value) || p.age;
-  p.degree = document.getElementById('pf_deg').value || p.degree;
-  p.email = document.getElementById('pf_email').value || p.email;
-  persistState();
-  renderProfile();
-  closeModal();
-}
-
-/* -----------------------
-   Assignments UI
-   ----------------------- */
-function renderAssignments(){
-  const list = document.getElementById('assignList');
-  list.innerHTML = '';
-  const filterUnit = document.getElementById('filterUnit');
-  const filterStatus = document.getElementById('filterStatus').value;
-  const sortBy = document.getElementById('sortBy').value;
-
-  // populate units filter once
-  const units = Array.from(new Set(state.assignments.map(a=>a.unit)));
-  const unitSelect = document.getElementById('filterUnit');
-  unitSelect.innerHTML = `<option value="all">All units</option>` + units.map(u=>`<option value="${u}">${u}</option>`).join('');
-
-  let items = [...state.assignments];
-  if(filterUnit.value && filterUnit.value !== 'all') items = items.filter(x=>x.unit===filterUnit.value);
-  if(filterStatus && filterStatus!=='all') items = items.filter(x=>x.status===filterStatus);
-
-  // sorting
-  items.sort((a,b)=>{
-    if(sortBy==='due_asc') return new Date(a.due) - new Date(b.due);
-    if(sortBy==='due_desc') return new Date(b.due) - new Date(a.due);
-    if(sortBy==='grade_desc') return (b.grade||0) - (a.grade||0);
-    if(sortBy==='grade_asc') return (a.grade||0) - (b.grade||0);
-    return 0;
-  });
-
-  // average grade
-  const graded = state.assignments.filter(s=>typeof s.grade === 'number');
-  const avg = graded.length ? Math.round(graded.reduce((s,x)=>s + x.grade,0)/graded.length) : 0;
-  document.getElementById('avgBadge').innerText = graded.length ? `${avg}%` : '--%';
-
-  // render rows
-  items.forEach(a=>{
-    const due = new Date(a.due);
-    const dueStr = isNaN(due) ? '—' : due.toLocaleDateString();
-    const gradeText = typeof a.grade === 'number' ? `${a.grade}%` : '—';
-
-    const row = document.createElement('div');
-    row.className = 'card assign-row';
-    row.innerHTML = `
-      <div class="assign-left">
-        <div style="min-width:6px"></div>
-        <div>
-          <div style="font-weight:700">${escapeHtml(a.title)}</div>
-          <div class="muted small">${escapeHtml(a.unit)} · Due ${dueStr}</div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <div style="text-align:right">
-          <div style="font-weight:800">${gradeText}</div>
-          <div class="muted small">${a.status}</div>
-        </div>
-        <div style="width:28px">
-          <button onclick="openAssignment('${a.id}')" aria-label="Open" style="border:0;background:transparent;cursor:pointer;color:var(--brand)">›</button>
-        </div>
-      </div>
+  /* PROFILE */
+  function renderProfile(){
+    const p=state.profile;
+    document.getElementById("profileName").innerText=p.name;
+    document.getElementById("profileDegree").innerText=p.degree;
+    document.getElementById("profileAge").innerText=p.age;
+    document.getElementById("profileID").innerText=p.id;
+    document.getElementById("profileEmail").innerText=p.email;
+    const first=p.name.split(" ")[0]||"Student";
+    document.getElementById("welcomeName").innerText=first;
+    const initials=(p.name.split(" ").map(s=>s[0]).join("").slice(0,2)||"SP").toUpperCase();
+    document.getElementById("avatarInitials").innerText=initials;
+  }
+  function editProfile(){
+    const p=state.profile;
+    const body=`
+      <label>Name<br><input id="pf_name" class="input" value="${escapeHtml(p.name)}"></label><br>
+      <label>Age<br><input id="pf_age" class="input" type="number" value="${p.age}"></label><br>
+      <label>Degree<br><input id="pf_deg" class="input" value="${escapeHtml(p.degree)}"></label><br>
+      <label>Email<br><input id="pf_email" class="input" value="${escapeHtml(p.email)}"></label><br>
+      <button class="btn-link" onclick="saveProfile()">Save</button>
     `;
-    list.appendChild(row);
-  });
-
-  // no items
-  if(items.length===0){
-    list.innerHTML = `<div class="card muted">No assignments match your filters.</div>`;
+    openModal("Edit profile",body);
   }
-}
+  function saveProfile(){
+    const p=state.profile;
+    p.name=document.getElementById("pf_name").value||p.name;
+    p.age=Number(document.getElementById("pf_age").value)||p.age;
+    p.degree=document.getElementById("pf_deg").value||p.degree;
+    p.email=document.getElementById("pf_email").value||p.email;
+    persist();
+    renderProfile();
+    closeModal();
+  }
 
-function openAssignment(id){
-  const a = state.assignments.find(s=>s.id===id);
-  if(!a) return;
-  const body = `
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div><strong>${escapeHtml(a.title)}</strong><div class="muted small">${escapeHtml(a.unit)}</div></div>
-      <div style="text-align:right"><div style="font-weight:800">${typeof a.grade==='number' ? a.grade+'%' : '—'}</div><div class="muted small">${a.status}</div></div>
-    </div>
-    <div style="margin-top:10px"><strong>Due</strong><div class="muted small">${a.due}</div></div>
-    <div style="margin-top:10px"><strong>Notes</strong><div class="muted small">${escapeHtml(a.notes || '—')}</div></div>
+  /* ASSIGNMENTS */
+  function renderAssignments(){
+    const list=document.getElementById("assignList");
+    list.innerHTML="";
+    const unitSelect=document.getElementById("filterUnit");
+    const statusFilter=document.getElementById("filterStatus").value;
+    const sortBy=document.getElementById("sortBy").value;
 
-    <div style="display:flex;gap:8px;margin-top:12px">
-      <button class="select" onclick="editAssignment('${a.id}')">Edit</button>
-      <button class="select" onclick="deleteAssignment('${a.id}')">Delete</button>
-      <button class="select" onclick="closeModal()">Close</button>
-    </div>
-  `;
-  openModal(a.title, body);
-}
+    const units=[...new Set(state.assignments.map(a=>a.unit))];
+    unitSelect.innerHTML='<option value="all">All units</option>'+units.map(u=>`<option value="${u}">${u}</option>`).join("");
+    let items=[...state.assignments];
 
-function openAddAssignment(){
-  const body = formMarkup(); // blank form
-  openModal('Add assignment', body);
-}
-function editAssignment(id){
-  const a = state.assignments.find(s=>s.id===id);
-  if(!a) return;
-  const body = formMarkup(a);
-  openModal('Edit assignment', body);
-}
-function formMarkup(a = {id:'',unit:'',title:'',due:'',status:'pending',grade:'',notes:''}){
-  const units = Array.from(new Set(state.assignments.map(x=>x.unit)));
-  const unitOptions = '<option value="">Select unit</option>' + units.map(u=>`<option value="${escapeHtml(u)}" ${a.unit===u?'selected':''}>${escapeHtml(u)}</option>`).join('');
-  return `
-    <label style="display:block;margin-bottom:6px">Unit
-      <select id="fa_unit" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee">${unitOptions}</select>
-    </label>
-    <label style="display:block;margin-bottom:6px">Title
-      <input id="fa_title" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee" value="${escapeHtml(a.title)}">
-    </label>
-    <label style="display:block;margin-bottom:6px">Due date
-      <input id="fa_due" type="date" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee" value="${a.due}">
-    </label>
-    <label style="display:block;margin-bottom:6px">Status
-      <select id="fa_status" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee">
-        <option value="pending" ${a.status==='pending'?'selected':''}>Pending</option>
-        <option value="submitted" ${a.status==='submitted'?'selected':''}>Submitted</option>
-        <option value="overdue" ${a.status==='overdue'?'selected':''}>Overdue</option>
-      </select>
-    </label>
-    <label style="display:block;margin-bottom:6px">Grade (optional)
-      <input id="fa_grade" type="number" min="0" max="100" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee" value="${a.grade || ''}">
-    </label>
-    <label style="display:block;margin-bottom:6px">Notes
-      <textarea id="fa_notes" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee">${escapeHtml(a.notes || '')}</textarea>
-    </label>
-    <div style="display:flex;gap:8px">
-      <button class="select" onclick="saveAssignment('${a.id || ''}')">Save</button>
-      <button class="select" onclick="closeModal()">Cancel</button>
-    </div>
-  `;
-}
-function saveAssignment(id){
-  const unit = document.getElementById('fa_unit').value || 'Unspecified';
-  const title = document.getElementById('fa_title').value || 'Untitled';
-  const due = document.getElementById('fa_due').value || '';
-  const status = document.getElementById('fa_status').value || 'pending';
-  const gradeVal = document.getElementById('fa_grade').value;
-  const grade = gradeVal === '' ? null : Number(gradeVal);
-  const notes = document.getElementById('fa_notes').value || '';
+    const uVal=unitSelect.value;
+    if(uVal!=="all") items=items.filter(a=>a.unit===uVal);
+    if(statusFilter!=="all") items=items.filter(a=>a.status===statusFilter);
 
-  if(!id){
-    // create
-    const nid = 'a' + Math.random().toString(36).slice(2,9);
-    state.assignments.push({id:nid,unit,title,due,status,grade,notes});
-  } else {
-    // update
-    const a = state.assignments.find(x=>x.id===id);
+    items.sort((a,b)=>{
+      if(sortBy==="due_asc") return new Date(a.due)-new Date(b.due);
+      if(sortBy==="due_desc") return new Date(b.due)-new Date(a.due);
+      if(sortBy==="grade_desc") return (b.grade||0)-(a.grade||0);
+      if(sortBy==="grade_asc") return (a.grade||0)-(b.grade||0);
+      return 0;
+    });
+
+    const graded=state.assignments.filter(a=>typeof a.grade==="number");
+    const avg=graded.length?Math.round(graded.reduce((s,x)=>s+x.grade,0)/graded.length):0;
+    document.getElementById("avgBadge").innerText=graded.length?avg+"%":"--%";
+
+    if(!items.length){
+      list.innerHTML='<div class="small muted">No assignments match your filters.</div>';
+      return;
+    }
+    items.forEach(a=>{
+      const dueStr=isNaN(new Date(a.due))?"—":new Date(a.due).toLocaleDateString();
+      const row=document.createElement("div");
+      row.className="card assign-row";
+      row.innerHTML=`
+        <div class="assign-left">
+          <div><strong>${escapeHtml(a.title)}</strong></div>
+          <div class="small muted">${escapeHtml(a.unit)} · Due ${dueStr}</div>
+        </div>
+        <div style="text-align:right">
+          <div><strong>${typeof a.grade==="number"?a.grade+"%":"—"}</strong></div>
+          <div class="small muted">${a.status}</div>
+          <button class="btn-link" onclick="openAssignment('${a.id}')">Open</button>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+  }
+  function openAssignment(id){
+    const a=state.assignments.find(x=>x.id===id);
     if(!a) return;
-    a.unit = unit; a.title = title; a.due = due; a.status = status; a.grade = grade; a.notes = notes;
+    const body=`
+      <strong>${escapeHtml(a.title)}</strong><br>
+      <span class="small muted">${escapeHtml(a.unit)}</span><br><br>
+      <div><strong>Due:</strong> ${a.due}</div>
+      <div><strong>Status:</strong> ${a.status}</div>
+      <div><strong>Grade:</strong> ${typeof a.grade==="number"?a.grade+"%":"—"}</div><br>
+      <div><strong>Notes</strong><br>${escapeHtml(a.notes||"—")}</div><br>
+      <button class="btn-link" onclick="editAssignment('${a.id}')">Edit</button>
+      <button class="btn-link" onclick="deleteAssignment('${a.id}')">Delete</button>
+    `;
+    openModal("Assignment",body);
   }
-  persistState();
-  closeModal();
-  renderAssignments();
-}
+  function openAddAssignment(){
+    const body=formMarkup();
+    openModal("Add assignment",body);
+  }
+  function editAssignment(id){
+    const a=state.assignments.find(x=>x.id===id);
+    if(!a) return;
+    openModal("Edit assignment",formMarkup(a));
+  }
+  function formMarkup(a={id:"",unit:"",title:"",due:"",status:"pending",grade:"",notes:""}){
+    const units=[...new Set(state.assignments.map(x=>x.unit))];
+    const unitOptions='<option value="">Select unit</option>'+units.map(u=>`<option value="${escapeHtml(u)}" ${a.unit===u?"selected":""}>${escapeHtml(u)}</option>`).join("");
+    return `
+      <label>Unit<br>
+        <select id="fa_unit" class="select">${unitOptions}</select>
+      </label><br>
+      <label>Title<br>
+        <input id="fa_title" class="input" value="${escapeHtml(a.title)}">
+      </label><br>
+      <label>Due date<br>
+        <input id="fa_due" class="input" type="date" value="${a.due}">
+      </label><br>
+      <label>Status<br>
+        <select id="fa_status" class="select">
+          <option value="pending" ${a.status==="pending"?"selected":""}>Pending</option>
+          <option value="submitted" ${a.status==="submitted"?"selected":""}>Submitted</option>
+          <option value="overdue" ${a.status==="overdue"?"selected":""}>Overdue</option>
+        </select>
+      </label><br>
+      <label>Grade (0–100)<br>
+        <input id="fa_grade" class="input" type="number" min="0" max="100" value="${a.grade??""}">
+      </label><br>
+      <label>Notes<br>
+        <textarea id="fa_notes" class="input" rows="3">${escapeHtml(a.notes||"")}</textarea>
+      </label><br>
+      <button class="btn-link" onclick="saveAssignment('${a.id||""}')">Save</button>
+    `;
+  }
+  function saveAssignment(id){
+    const unit=document.getElementById("fa_unit").value||"Unspecified";
+    const title=document.getElementById("fa_title").value||"Untitled";
+    const due=document.getElementById("fa_due").value||"";
+    const status=document.getElementById("fa_status").value||"pending";
+    const gradeVal=document.getElementById("fa_grade").value;
+    const grade=gradeVal===""?null:Number(gradeVal);
+    const notes=document.getElementById("fa_notes").value||"";
+    if(!id){
+      const nid="a"+Math.random().toString(36).slice(2,9);
+      state.assignments.push({id:nid,unit,title,due,status,grade,notes});
+    }else{
+      const a=state.assignments.find(x=>x.id===id);
+      if(a){a.unit=unit;a.title=title;a.due=due;a.status=status;a.grade=grade;a.notes=notes;}
+    }
+    persist();
+    closeModal();
+    renderAssignments();
+  }
+  function deleteAssignment(id){
+    if(!confirm("Delete this assignment?")) return;
+    state.assignments=state.assignments.filter(x=>x.id!==id);
+    persist();
+    closeModal();
+    renderAssignments();
+  }
+  function exportAssignments(){
+    const blob=new Blob([JSON.stringify(state.assignments,null,2)],{type:"application/json"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download="assignments.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
-function deleteAssignment(id){
-  if(!confirm('Delete this assignment?')) return;
-  state.assignments = state.assignments.filter(x=>x.id !== id);
-  persistState();
-  closeModal();
-  renderAssignments();
-}
+  /* MODAL + HELPERS */
+  function openModal(title,html){
+    document.getElementById("modalTitle").innerText=title;
+    document.getElementById("modalBody").innerHTML=html;
+    const m=document.getElementById("modal");
+    m.style.display="flex";
+    m.setAttribute("aria-hidden","false");
+  }
+  function closeModal(){
+    const m=document.getElementById("modal");
+    m.style.display="none";
+    m.setAttribute("aria-hidden","true");
+  }
+  function escapeHtml(s){
+    if(!s) return "";
+    return String(s).replace(/[&<>\"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+  }
+  function persist(){localStorage.setItem("sp_state",JSON.stringify(state));}
+  function openFeature(name){alert("Open feature: "+name);}
 
-/* export simple JSON */
-function exportAssignments(){
-  const blob = new Blob([JSON.stringify(state.assignments,null,2)],{type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'assignments.json'; a.click();
-  URL.revokeObjectURL(url);
-}
-
-/* -----------------------
-   Modal helpers
-   ----------------------- */
-function openModal(title, bodyHTML){
-  const modal = document.getElementById('modal');
-  document.getElementById('modalTitle').innerText = title;
-  document.getElementById('modalBody').innerHTML = bodyHTML;
-  modal.style.display = 'flex';
-  modal.setAttribute('aria-hidden','false');
-}
-function closeModal(){
-  const modal = document.getElementById('modal');
-  modal.style.display = 'none';
-  modal.setAttribute('aria-hidden','true');
-}
-
-/* -----------------------
-   small helpers
-   ----------------------- */
-function openFeature(name){ alert('Open feature: ' + name); }
-function persistState(){ localStorage.setItem('sp_state', JSON.stringify(state)); }
-function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-/* -----------------------
-   Init & attach
-   ----------------------- */
-(function init(){
-  // populate initial UI
+  // init
   renderProfile();
   renderAssignments();
-  // click-away to close modal
-  document.getElementById('modal').addEventListener('click', e=>{
-    if(e.target === document.getElementById('modal')) closeModal();
+  document.getElementById("modal").addEventListener("click",e=>{
+    if(e.target===document.getElementById("modal")) closeModal();
   });
-  // keyboard Escape closes modal
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+  document.addEventListener("keydown",e=>{if(e.key==="Escape") closeModal();});
 
-  // ensure nav items switch pages
-  document.querySelectorAll('.nav-item').forEach(n=>{
-    n.addEventListener('click', ()=> {
-      const page = n.getAttribute('data-page');
-      switchTo(page);
-    });
-  });
-})();
-</script>
-
-<!-- Service worker registration for PWA (make sure sw.js exists in same folder) -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').catch(err => {
-        console.log('Service worker registration failed:', err);
-      });
-    });
+  // service worker (optional; only if you create sw.js)
+  if("serviceWorker" in navigator){
+    window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
   }
 </script>
-
 </body>
 </html>
