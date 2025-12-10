@@ -182,13 +182,6 @@
       margin-top: 4px;
     }
 
-    .snap-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
     .quick-grid {
       display: flex;
       gap: 10px;
@@ -220,6 +213,13 @@
       margin-top: 4px;
     }
 
+    .snap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
     /* HOME BANNER */
     .home-banner {
       border-radius: 18px;
@@ -232,139 +232,6 @@
       display: block;
       height: 180px;
       object-fit: cover;
-    }
-
-    /* UniSA-style NEXT CLASS / NEXT ASSESSMENT */
-    .next-row {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 6px;
-    }
-
-    .next-card {
-      display: flex;
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid #e5e7eb;
-      background: #ffffff;
-      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.06);
-    }
-
-    .next-date {
-      width: 60px;
-      background: var(--brand);
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 4px;
-    }
-
-    .next-date-day {
-      font-size: 18px;
-      font-weight: 700;
-      line-height: 1;
-    }
-
-    .next-date-month {
-      font-size: 11px;
-      text-transform: uppercase;
-      margin-top: 2px;
-    }
-
-    .next-date-label {
-      font-size: 10px;
-      opacity: 0.9;
-      margin-top: 6px;
-      text-align: center;
-    }
-
-    .next-body {
-      flex: 1;
-      padding: 8px 10px;
-      background: #e0ebff;
-    }
-
-    .next-heading {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--brand);
-      text-transform: uppercase;
-      margin-bottom: 2px;
-    }
-
-    .next-time {
-      font-size: 12px;
-      font-weight: 500;
-      margin-bottom: 3px;
-    }
-
-    .next-location {
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 3px;
-    }
-
-    .next-course {
-      font-size: 11px;
-      color: #1f2933;
-    }
-
-    /* SUBJECT LIST LIKE UniSA */
-    .subject-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-top: 6px;
-    }
-
-    .subject-item {
-      display: flex;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #e5e7eb;
-      background: #ffffff;
-    }
-
-    .subject-code {
-      width: 72px;
-      background: var(--brand);
-      color: #ffffff;
-      padding: 8px 6px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 2px;
-    }
-
-    .subject-code-main {
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    .subject-code-year {
-      font-size: 10px;
-      opacity: 0.9;
-    }
-
-    .subject-body {
-      flex: 1;
-      padding: 8px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .subject-title {
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    .subject-meta {
-      font-size: 11px;
-      color: var(--muted);
     }
 
     /* TIMETABLE PAGE */
@@ -686,50 +553,16 @@
 <main>
   <!-- HOME -->
   <section id="homePage" class="page active">
-    <!-- UniSA-style next class / assessment -->
     <div class="card">
-      <div class="snap-header">
-        <div>
+      <div class="home-top">
+        <div class="home-top-main">
           <div class="small muted">Today</div>
-          <div class="home-top-title">Schedule overview</div>
-        </div>
-      </div>
-      <div class="next-row">
-        <div class="next-card">
-          <div class="next-date">
-            <div class="next-date-day">30</div>
-            <div class="next-date-month">OCT</div>
-            <div class="next-date-label">Next class</div>
-          </div>
-          <div class="next-body">
-            <div class="next-heading">Next class</div>
-            <div class="next-time">09:00 AM – 12:00 PM ACDT</div>
-            <div class="next-location">GK1-51 MAG (W5H)</div>
-            <div class="next-course">
-              Becoming a Primary Teacher with an Arts Specialisation
-            </div>
-          </div>
-        </div>
-
-        <div class="next-card">
-          <div class="next-date">
-            <div class="next-date-day">30</div>
-            <div class="next-date-month">OCT</div>
-            <div class="next-date-label">Next assessment</div>
-          </div>
-          <div class="next-body">
-            <div class="next-heading">Next assessment</div>
-            <div class="next-time">03:00 PM ACDT</div>
-            <div class="next-location">Assessment 3 · Project</div>
-            <div class="next-course">
-              Design and Technology Education
-            </div>
-          </div>
+          <div class="home-top-title">No upcoming classes</div>
+          <div class="home-top-sub">You don't have any classes scheduled today.</div>
         </div>
       </div>
     </div>
 
-    <!-- QUICK ACTIONS -->
     <div class="card">
       <div class="home-top">
         <div>
@@ -771,7 +604,6 @@
       </div>
     </div>
 
-    <!-- SIMPLE TIMETABLE SUMMARY -->
     <div class="card">
       <div class="snap-header">
         <div>
@@ -785,67 +617,6 @@
     <!-- HOME BANNER (students image) -->
     <div class="card home-banner">
       <img src="students-banner.jpg" alt="Students on campus">
-    </div>
-
-    <!-- SUBJECTS LIST (UniSA-style blue/white) -->
-    <div class="card">
-      <div class="snap-header">
-        <div>
-          <div class="small muted">Enrolment</div>
-          <div class="home-top-title">Your subjects</div>
-        </div>
-      </div>
-      <div class="subject-list">
-        <div class="subject-item">
-          <div class="subject-code">
-            <div class="subject-code-main">EDUC 1081</div>
-            <div class="subject-code-year">SP2, 2020</div>
-          </div>
-          <div class="subject-body">
-            <div class="subject-title">
-              Professional Experience 1: Introduction to Education
-            </div>
-            <div class="subject-meta">City East · On campus</div>
-          </div>
-        </div>
-
-        <div class="subject-item">
-          <div class="subject-code">
-            <div class="subject-code-main">EDUC 1099</div>
-            <div class="subject-code-year">SP5, 2020</div>
-          </div>
-          <div class="subject-body">
-            <div class="subject-title">
-              Becoming a Primary Teacher with an Arts Specialisation
-            </div>
-            <div class="subject-meta">Magill · On campus</div>
-          </div>
-        </div>
-
-        <div class="subject-item">
-          <div class="subject-code">
-            <div class="subject-code-main">EDUC 1101</div>
-            <div class="subject-code-year">SP5, 2020</div>
-          </div>
-          <div class="subject-body">
-            <div class="subject-title">Design and Technology Education</div>
-            <div class="subject-meta">City West · On campus</div>
-          </div>
-        </div>
-
-        <div class="subject-item">
-          <div class="subject-code">
-            <div class="subject-code-main">EDUC 1102</div>
-            <div class="subject-code-year">SP5, 2020</div>
-          </div>
-          <div class="subject-body">
-            <div class="subject-title">
-              Foundations in Learning and Teaching 1
-            </div>
-            <div class="subject-meta">City West · On campus</div>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -1272,4 +1043,224 @@
       '<div><strong>Status:</strong> ' + a.status + '</div>' +
       '<div><strong>Grade:</strong> ' + (typeof a.grade === "number" ? a.grade + "%" : "—") + '</div><br>' +
       '<div><strong>Notes</strong><br>' + escapeHtml(a.notes || "—") + '</div><br>' +
-      '<button class="btn-link" onclick="edi
+      '<button class="btn-link" onclick="editAssignment(\'' + a.id + '\')">Edit</button>' +
+      '<button class="btn-link" onclick="deleteAssignment(\'' + a.id + '\')">Delete</button>';
+
+    openModal("Assignment", body);
+  }
+
+  function openAddAssignment() {
+    const body = formMarkup();
+    openModal("Add assignment", body);
+  }
+
+  function editAssignment(id) {
+    const a = state.assignments.find(x => x.id === id);
+    if (!a) return;
+    openModal("Edit assignment", formMarkup(a));
+  }
+
+  function formMarkup(a = { id: "", unit: "", title: "", due: "", status: "pending", grade: "", notes: "" }) {
+    const units = [...new Set(state.assignments.map(x => x.unit))];
+    const unitOptions =
+      '<option value="">Select unit</option>' +
+      units.map(u =>
+        '<option value="' + escapeHtml(u) + '"' +
+          (a.unit === u ? " selected" : "") +
+        ">" + escapeHtml(u) + "</option>"
+      ).join("");
+
+    return (
+      '<label>Unit<br>' +
+        '<select id="fa_unit" class="select">' + unitOptions + '</select>' +
+      '</label><br>' +
+      '<label>Title<br>' +
+        '<input id="fa_title" class="input" value="' + escapeHtml(a.title) + '">' +
+      '</label><br>' +
+      '<label>Due date<br>' +
+        '<input id="fa_due" class="input" type="date" value="' + a.due + '">' +
+      '</label><br>' +
+      '<label>Status<br>' +
+        '<select id="fa_status" class="select">' +
+          '<option value="pending"' + (a.status === "pending" ? " selected" : "") + '>Pending</option>' +
+          '<option value="submitted"' + (a.status === "submitted" ? " selected" : "") + '>Submitted</option>' +
+          '<option value="overdue"' + (a.status === "overdue" ? " selected" : "") + '>Overdue</option>' +
+        '</select>' +
+      '</label><br>' +
+      '<label>Grade (0–100)<br>' +
+        '<input id="fa_grade" class="input" type="number" min="0" max="100" value="' + (a.grade ?? "") + '">' +
+      '</label><br>' +
+      '<label>Notes<br>' +
+        '<textarea id="fa_notes" class="input" rows="3">' +
+          escapeHtml(a.notes || "") +
+        '</textarea>' +
+      '</label><br>' +
+      '<button class="btn-link" onclick="saveAssignment(\'' + (a.id || "") + '\')">Save</button>'
+    );
+  }
+
+  function saveAssignment(id) {
+    const unit = document.getElementById("fa_unit").value || "Unspecified";
+    const title = document.getElementById("fa_title").value || "Untitled";
+    const due = document.getElementById("fa_due").value || "";
+    const status = document.getElementById("fa_status").value || "pending";
+    const gradeVal = document.getElementById("fa_grade").value;
+    const grade = gradeVal === "" ? null : Number(gradeVal);
+    const notes = document.getElementById("fa_notes").value || "";
+
+    if (!id) {
+      const nid = "a" + Math.random().toString(36).slice(2, 9);
+      state.assignments.push({ id: nid, unit, title, due, status, grade, notes });
+    } else {
+      const a = state.assignments.find(x => x.id === id);
+      if (a) {
+        a.unit = unit;
+        a.title = title;
+        a.due = due;
+        a.status = status;
+        a.grade = grade;
+        a.notes = notes;
+      }
+    }
+
+    persist();
+    closeModal();
+    renderAssignments();
+  }
+
+  function deleteAssignment(id) {
+    if (!confirm("Delete this assignment?")) return;
+    state.assignments = state.assignments.filter(x => x.id !== id);
+    persist();
+    closeModal();
+    renderAssignments();
+  }
+
+  function exportAssignments() {
+    const blob = new Blob([JSON.stringify(state.assignments, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "assignments.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  /* MODAL + swipe-up close */
+  function openModal(title, html, options = {}) {
+    const backdrop = document.getElementById("modal");
+    const dialog = backdrop.querySelector(".modal");
+
+    document.getElementById("modalTitle").innerText = title;
+    document.getElementById("modalBody").innerHTML = html;
+
+    dialog.classList.remove("modal-fullscreen");
+    dialog.style.transform = "translateY(0)";
+    dialog.style.opacity = "1";
+
+    if (options.fullscreen) {
+      dialog.classList.add("modal-fullscreen");
+    }
+
+    backdrop.style.display = "flex";
+    backdrop.setAttribute("aria-hidden", "false");
+  }
+
+  function closeModal() {
+    const backdrop = document.getElementById("modal");
+    const dialog = backdrop.querySelector(".modal");
+
+    dialog.style.transform = "translateY(0)";
+    dialog.style.opacity = "1";
+
+    backdrop.style.display = "none";
+    backdrop.setAttribute("aria-hidden", "true");
+  }
+
+  /* SWIPE-UP TO CLOSE FULLSCREEN MODALS */
+  let touchStartY = null;
+  let touchCurrentY = null;
+  let isDraggingModal = false;
+
+  function isModalFullscreen() {
+    const dialog = document.querySelector("#modal .modal");
+    return dialog && dialog.classList.contains("modal-fullscreen");
+  }
+
+  function onModalTouchStart(e) {
+    if (!isModalFullscreen()) return;
+    if (e.touches.length !== 1) return;
+
+    touchStartY = e.touches[0].clientY;
+    touchCurrentY = touchStartY;
+    isDraggingModal = true;
+  }
+
+  function onModalTouchMove(e) {
+    if (!isDraggingModal || !isModalFullscreen()) return;
+
+    touchCurrentY = e.touches[0].clientY;
+    const diff = touchCurrentY - touchStartY;
+    const dialog = document.querySelector("#modal .modal");
+
+    if (diff < 0 && dialog) {
+      dialog.style.transform = "translateY(" + diff + "px)";
+      dialog.style.opacity = String(Math.max(0.4, 1 - (-diff / 300)));
+    }
+  }
+
+  function onModalTouchEnd() {
+    if (!isDraggingModal || !isModalFullscreen()) return;
+
+    const diff = touchCurrentY - touchStartY;
+    const dialog = document.querySelector("#modal .modal");
+
+    isDraggingModal = false;
+    touchStartY = null;
+    touchCurrentY = null;
+
+    if (!dialog) return;
+
+    if (diff < -80) {
+      closeModal();
+    } else {
+      dialog.style.transform = "translateY(0)";
+      dialog.style.opacity = "1";
+    }
+  }
+
+  function escapeHtml(s) {
+    if (!s) return "";
+    return String(s).replace(/[&<>\"']/g, c => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "\"": "&quot;",
+      "'": "&#39;"
+    }[c]));
+  }
+
+  /* INIT */
+  renderProfile();
+  renderAssignments();
+
+  const modalBackdrop = document.getElementById("modal");
+  modalBackdrop.addEventListener("click", e => {
+    if (e.target === modalBackdrop) closeModal();
+  });
+  modalBackdrop.addEventListener("touchstart", onModalTouchStart, { passive: true });
+  modalBackdrop.addEventListener("touchmove", onModalTouchMove, { passive: true });
+  modalBackdrop.addEventListener("touchend", onModalTouchEnd, { passive: true });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") closeModal();
+  });
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>
