@@ -363,7 +363,7 @@
       flex-direction: column;
       align-items: center;
       gap: 4px;
-      cursor: pointer;
+      /* no onclick now – image is static */
     }
 
     .id-preview-image {
@@ -380,7 +380,7 @@
       box-shadow: 0 6px 18px rgba(15, 23, 42, 0.35);
     }
 
-    /* ID FULLSCREEN */
+    /* ID FULLSCREEN (CSS kept but not used) */
     .id-fullscreen-wrapper {
       width: 100%;
       height: 100%;
@@ -681,9 +681,10 @@
       <div class="profile-name" id="profileName">Luciano Jesse Rostirolla</div>
       <div class="profile-degree" id="profileDegree">Bachelor of Electrical Engineering</div>
 
-      <div class="id-preview-wrapper" onclick="openIdCard()">
-        <img src="id-card.png" alt="Student ID card" class="id-preview-image">
-        <div class="small muted">Tap to view full screen</div>
+      <!-- ID now static: no onclick -->
+      <div class="id-preview-wrapper">
+        <img src="id-card-proper.png" alt="Student ID card" class="id-preview-image">
+        <div class="small muted">Student ID</div>
       </div>
 
       <div class="profile-info">
@@ -962,16 +963,6 @@
       '</div>';
 
     openModal("Campus map", body, { fullscreen: true });
-  }
-
-  /* FULLSCREEN ID CARD */
-  function openIdCard() {
-    const body =
-      '<div class="id-fullscreen-wrapper">' +
-        '<img src="id-card.png" alt="Student ID card" class="id-fullscreen-image">' +
-      '</div>';
-
-    openModal("Student ID card", body, { fullscreen: true });
   }
 
   /* ASSIGNMENTS */
